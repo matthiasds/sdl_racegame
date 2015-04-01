@@ -18,20 +18,25 @@
 #include <ctime>
 #include <vector>
 
-#include "RenderDevice.h"
+#include "Renderer.h"
 #include "EntityFactory.h"
 #include "GameRenderer.h"
 
 
+class Road;
+
+
 class Game {
 private:
-RenderDevice *renderDevice;
+	Road *road; //temp
+Renderer *renderDevice;
 GameRenderer * gameRenderer;
 EntityFactory * factory;
-std::vector<Entity> entitylist;
+std::vector<Renderable*> renderList;  //list of imlemented class renderable +- composite design pattern
+std::vector<Entity*> entityList;
 public:
 	Game(std::string &render_device_name);
-	RenderDevice* getRenderer() const;
+	Renderer* getRenderer() const;
 	void start();
 	virtual ~Game();
 };

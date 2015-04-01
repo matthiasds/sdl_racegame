@@ -154,7 +154,7 @@ bool isWithin(FPoint center, float radius, FPoint target) {
 /**
  * is target within the area defined by rectangle r?
  */
-bool isWithin(Rect r, Point target) {
+bool isWithin(SubArea r, Point target) {
 	return target.x >= r.x && target.y >= r.y && target.x < r.x+r.w && target.y < r.y+r.h;
 }
 
@@ -198,7 +198,7 @@ float calcTheta(float x1, float y1, float x2, float y2) {
 }
 
 
-void alignToScreenEdge(std::string alignment, Rect *r) {
+void alignToScreenEdge(std::string alignment, SubArea *r) {
 	if (!r) return;
 
 	if (alignment == "topleft") {

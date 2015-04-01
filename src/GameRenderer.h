@@ -9,21 +9,21 @@
 #define GAMERENDERER_H_
 
 #include "CommonIncludes.h"
-#include "RenderDevice.h"
+#include "Renderer.h"
 #include "Entity.h"
 
 class GameRenderer {
 private:
-	RenderDevice * renderer;
+	Renderer * renderer;
+	//bool priocompare(Renderable *r1, Renderable *r2);
 public:
-	GameRenderer(RenderDevice * renderer);
+	GameRenderer(Renderer * renderer);
 	virtual ~GameRenderer();
 	//MapRenderer(const MapRenderer &copy); // not implemented
 
 	int load(std::string filename);
 	void logic();
-	void drawRenderable(std::vector<Renderable>::iterator r_cursor);
-	void render(std::vector<Entity> &gameEntities);
+	void render(std::vector<Renderable*> &renderables);
 	// some events can trigger powers
 	void activatePower(int power_index, unsigned statblock_index, FPoint &target);
 

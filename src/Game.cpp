@@ -32,8 +32,12 @@ Game::Game(std::string &render_device_name) {
 			renderDevice = getRenderDevice(render_device_name);
 			int status = renderDevice->createContext(800, 600);
 			factory = new SdlFactory();
-			Entity * entity1 = factory->createCar(renderDevice);
-			entitylist.push_back(*entity1);
+
+			/*create Game entitys and add them to the list of all entities */
+			Entity * entity = factory->createCar(renderDevice);
+			renderList.push_back(entity);
+			road = factory->createRoad(renderDevice);
+			renderList.push_back(road);
 			gameRenderer = new GameRenderer(renderDevice);
 
 			if (status == -1) {
@@ -97,14 +101,9 @@ void Game::start() {
 			}
 		}*/
 
-		std::vector<Renderable> rens;
-
-		for(std::vector<Entity>::iterator it = entitylist.begin(); it != entitylist.end(); ++it) {
-		    /* std::cout << *it; ... */
-		}
-
 		renderDevice->blankScreen();
-		gameRenderer->render(entitylist);
+		gameRenderer->render(renderList);
+		road->advance();
 
 		// display the FPS counter
 		// if the frame completed quickly, we estimate the delay here
@@ -234,7 +233,7 @@ Game::~Game() {
 ////	comb->render();
 //}
 
-RenderDevice* Game::getRenderer() const {
+Renderer* Game::getRenderer() const {
 	return renderDevice;
 }
 
@@ -242,4 +241,4 @@ RenderDevice* Game::getRenderer() const {
  * Binnen Entity kunnen we lijst maken van cars, roads... en degene die getoond moeten worden toevoegen aan renderable.
  * Er zijn ook menu's... die niet behoren tot entity, vandaar dat renderable nog niet zo'n slecht idee is
  */
- */
+

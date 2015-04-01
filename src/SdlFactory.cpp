@@ -5,7 +5,7 @@
  *      Author: Matthias
  */
 
-#include <SdlFactory.h>
+#include "SdlFactory.h"
 
 SdlFactory::SdlFactory() {
 	// TODO Auto-generated constructor stub
@@ -16,7 +16,13 @@ SdlFactory::~SdlFactory() {
 	// TODO Auto-generated destructor stub
 }
 
-Car* SdlFactory::createCar(RenderDevice* renderer) {
+Car* SdlFactory::createCar(Renderer* renderer) {
 	return new SdlCar(renderer);
 }
+
+Road* SdlFactory::createRoad(Renderer* renderer) {
+	return new SdlRoad(renderer);
+}
+
+
 

@@ -9,18 +9,11 @@
 #include "Entity.h"
 
 
-Car::Car(RenderDevice *Renderer)
-	: Entity(Renderer), speed(0) {
-	entityRender=new Renderable();
-	entityRender->map_pos=FPoint(Point(10,10));
-	SDL_Rect rect;
-	rect.h=10;
-	rect.w=10;
-	rect.x=10;
-	rect.y=10;
-	entityRender->src=rect;
-	entityRender->offset=Point(10,10);
-	entityRender->prio=1;
+Car::Car()
+	: speed(0) {
+	pos=FPoint(Point(10,10));
+
+	prio=2;
 	}
 
 
@@ -63,12 +56,6 @@ void Car::set_direction() {
 }
 
 
-
-
-void Car::addRenders(std::vector<Renderable> &r) {
-	//Renderable ren = concretecar->gettexture
-	//r.push_back(ren);
-}
 
 Car::~Car() {
 //	if (SHOW_TARGET) {

@@ -17,11 +17,11 @@ private:
 	int speed;
 
 public:
-	Car(RenderDevice* renderer);
+	Car();
 	//virtual void loadGraphics() =0;
 	~Car();
 	bool move();
-	void addRenders(std::vector<Renderable> &r);
+
 	void set_direction();
 };
 

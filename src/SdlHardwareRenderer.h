@@ -1,27 +1,11 @@
-/*
-Copyright © 2013 Igor Paliychuk
-Copyright © 2013-2014 Justin Jacobs
 
-This file is part of FLARE.
-
-FLARE is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation,
-either version 3 of the License, or (at your option) any later version.
-
-FLARE is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-FLARE.  If not, see http://www.gnu.org/licenses/
-*/
 
 #pragma once
 #ifndef SDLHARDWARERENDERDEVICE_H
 #define SDLHARDWARERENDERDEVICE_H
 
 
-#include "RenderDevice.h"
+#include "Renderer.h"
 
 /** Provide rendering device using SDL_BlitSurface backend.
  *
@@ -31,10 +15,6 @@ FLARE.  If not, see http://www.gnu.org/licenses/
  * As this is for the FLARE engine, the implementation uses the engine's
  * global settings context, which is included by the interface.
  *
- * @class SDLHardwareRenderDevice
- * @see RenderDevice
- * @author Kurt Rinnert
- * @date 2013-07-06
  *
  */
 
@@ -44,10 +24,10 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 
 
 /** SDL Image */
-class SDLHardwareImage : public Image {
+class SdlHardwareImage : public Image {
 public:
-	SDLHardwareImage(RenderDevice *device, SDL_Renderer *_renderer);
-	virtual ~SDLHardwareImage();
+	SdlHardwareImage(Renderer *device, SDL_Renderer *_renderer);
+	virtual ~SdlHardwareImage();
 	int getWidth() const;
 	int getHeight() const;
 
@@ -61,19 +41,19 @@ public:
 	SDL_Texture *surface;
 };
 
-class SDLHardwareRenderDevice : public RenderDevice {
+class SdlHardwareRenderer : public Renderer {
 
 public:
 
-	SDLHardwareRenderDevice();
+	SdlHardwareRenderer();
 	int createContext(int width, int height);
-	Rect getContextSize();
+	SubArea getContextSize();
 
-	virtual int render(Renderable& r, Rect dest);
+	virtual int render(Renderable& r, SubArea dest);
 	virtual int render(Sprite* r);
-	virtual int renderToImage(Image* src_image, Rect& src, Image* dest_image, Rect& dest, bool dest_is_transparent = false);
+	virtual int renderToImage(Image* src_image, SubArea& src, Image* dest_image, SubArea& dest, bool dest_is_transparent = false);
 
-	int renderText(TTF_Font *ttf_font, const std::string& text, Color color, Rect& dest);
+	int renderText(TTF_Font *ttf_font, const std::string& text, Color color, SubArea& dest);
 	Image *renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended = true);
 	void drawPixel(int x, int y, Uint32 color);
 	void drawRectangle(const Point& p0, const Point& p1, Uint32 color);
@@ -85,7 +65,7 @@ public:
 	Image *createImage(int width, int height);
 	void setGamma(float g);
 	void updateTitleBar();
-	void listModes(std::vector<Rect> &modes);
+	void listModes(std::vector<SubArea> &modes);
 	void freeImage(Image *image);
 
 	Image* loadImage(std::string filename,

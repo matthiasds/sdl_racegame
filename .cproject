@@ -32,7 +32,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include\SDL2\SDL_image.h&quot;"/>
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option id="gnu.cpp.compiler.option.dialect.std.535493032" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.dialect.std.535493032" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.c++1y" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.64511255" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug">
@@ -61,13 +61,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1854227024" name="GameRenderer.h" rcbsApplicability="disable" resourcePath="include/GameRenderer.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1274562840" name="GameRenderer.cpp" rcbsApplicability="disable" resourcePath="src/GameRenderer.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157.2147015197">
-						<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157.2147015197" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157"/>
-					</fileInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1163688757" name="Menu.h" rcbsApplicability="disable" resourcePath="src/Menu.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1854227024" name="GameRenderer.h" rcbsApplicability="disable" resourcePath="src/GameRenderer.h" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="Menu.h|Menu.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

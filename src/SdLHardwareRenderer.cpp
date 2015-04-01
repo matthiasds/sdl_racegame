@@ -1,57 +1,42 @@
-/*
-Copyright © 2013 Igor Paliychuk
-Copyright © 2013-2014 Justin Jacobs
 
-This file is part of FLARE.
-
-FLARE is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation,
-either version 3 of the License, or (at your option) any later version.
-
-FLARE is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-FLARE.  If not, see http://www.gnu.org/licenses/
-*/
 
 #include <iostream>
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+//#include <string.h>
+#include <string>
 
 //#include "SharedResources.h"
 #include "Settings.h"
 #include "Utils.h"
 
-#include "SDLHardwareRenderDevice.h"
 #include <SDL2\SDL_ttf.h>
+#include "SdlHardwareRenderer.h"
 
 
-SDLHardwareImage::SDLHardwareImage(RenderDevice *_device, SDL_Renderer *_renderer)
+SdlHardwareImage::SdlHardwareImage(Renderer *_device, SDL_Renderer *_renderer)
 	: Image(_device)
 	, renderer(_renderer)
 	, surface(NULL) {
 }
 
-SDLHardwareImage::~SDLHardwareImage() {
+SdlHardwareImage::~SdlHardwareImage() {
 }
 
-int SDLHardwareImage::getWidth() const {
+int SdlHardwareImage::getWidth() const {
 	int w, h;
 	SDL_QueryTexture(surface, NULL, NULL, &w, &h);
 	return (surface ? w : 0);
 }
 
-int SDLHardwareImage::getHeight() const {
+int SdlHardwareImage::getHeight() const {
 	int w, h;
 	SDL_QueryTexture(surface, NULL, NULL, &w, &h);
 	return (surface ? h : 0);
 }
 
-void SDLHardwareImage::fillWithColor(Uint32 color) {
+void SdlHardwareImage::fillWithColor(Uint32 color) {
 	if (!surface) return;
 
 	Uint32 u_format;
@@ -74,7 +59,7 @@ void SDLHardwareImage::fillWithColor(Uint32 color) {
 /*
  * Set the pixel at (x, y) to the given value
  */
-void SDLHardwareImage::drawPixel(int x, int y, Uint32 pixel) {
+void SdlHardwareImage::drawPixel(int x, int y, Uint32 pixel) {
 	if (!surface) return;
 
 	Uint32 u_format;
@@ -94,7 +79,7 @@ void SDLHardwareImage::drawPixel(int x, int y, Uint32 pixel) {
 	SDL_SetRenderTarget(renderer, NULL);
 }
 
-Uint32 SDLHardwareImage::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
+Uint32 SdlHardwareImage::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
 	if (!surface) return 0;
 
 	Uint32 u_format;
@@ -111,7 +96,7 @@ Uint32 SDLHardwareImage::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
 	}
 }
 
-Uint32 SDLHardwareImage::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+Uint32 SdlHardwareImage::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	if (!surface) return 0;
 
 	Uint32 u_format;
@@ -128,11 +113,11 @@ Uint32 SDLHardwareImage::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	}
 }
 
-Image* SDLHardwareImage::resize(int width, int height) {
+Image* SdlHardwareImage::resize(int width, int height) {
 	if(!surface || width <= 0 || height <= 0)
 		return NULL;
 
-	SDLHardwareImage *scaled = new SDLHardwareImage(device, renderer);
+	SdlHardwareImage *scaled = new SdlHardwareImage(device, renderer);
 	if (!scaled) return NULL;
 
 	scaled->surface = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, width, height);
@@ -154,7 +139,7 @@ Image* SDLHardwareImage::resize(int width, int height) {
 	return NULL;
 }
 
-SDLHardwareRenderDevice::SDLHardwareRenderDevice()
+SdlHardwareRenderer::SdlHardwareRenderer()
 	: screen(NULL)
 	, renderer(NULL)
 	, titlebar_icon(NULL)
@@ -163,7 +148,7 @@ SDLHardwareRenderDevice::SDLHardwareRenderDevice()
 	std::cout << "Using Render Device: SDLHardwareRenderDevice (hardware, SDL 2)" << std::endl;
 }
 
-int SDLHardwareRenderDevice::createContext(int width, int height) {
+int SdlHardwareRenderer::createContext(int width, int height) {
 	int window_w = width;
 	int window_h = height;
 
@@ -194,10 +179,7 @@ int SDLHardwareRenderDevice::createContext(int width, int height) {
 								window_w, window_h,
 								flags);
 
-	if (HWSURFACE) flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
-	else flags = SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE;
-
-	if (DOUBLEBUF) flags = flags | SDL_RENDERER_PRESENTVSYNC;
+	if (HWSURFACE) flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_TARGETTEXTURE;
 
 	if (screen != NULL) renderer = SDL_CreateRenderer(screen, -1, flags);
 
@@ -218,23 +200,21 @@ int SDLHardwareRenderDevice::createContext(int width, int height) {
 	}
 }
 
-Rect SDLHardwareRenderDevice::getContextSize() {
-	Rect size;
+SubArea SdlHardwareRenderer::getContextSize() {
+	SubArea size;
 	size.x = size.y = 0;
 	SDL_GetWindowSize(screen, &size.w, &size.h);
 
 	return size;
 }
 
-int SDLHardwareRenderDevice::render(Renderable& r, Rect dest) {
-	dest.w = r.src.w;
-	dest.h = r.src.h;
-    SDL_Rect src = r.src;
+int SdlHardwareRenderer::render(Renderable& r, SubArea dest) {
+    SDL_Rect src = r.getSrc();
     SDL_Rect _dest = dest;
-	return SDL_RenderCopy(renderer, static_cast<SDLHardwareImage *>(r.image)->surface, &src, &_dest);
+	return SDL_RenderCopy(renderer, static_cast<SdlHardwareImage *>(r.getImage())->surface, &src, &_dest);
 }
 
-int SDLHardwareRenderDevice::render(Sprite *r) {
+int SdlHardwareRenderer::render(Sprite *r) {
 	if (r == NULL) {
 		return -1;
 	}
@@ -260,14 +240,14 @@ int SDLHardwareRenderDevice::render(Sprite *r) {
 
     SDL_Rect src = m_clip;
     SDL_Rect dest = m_dest;
-	return SDL_RenderCopy(renderer, static_cast<SDLHardwareImage *>(r->getGraphics())->surface, &src, &dest);
+	return SDL_RenderCopy(renderer, static_cast<SdlHardwareImage *>(r->getGraphics())->surface, &src, &dest);
 }
 
-int SDLHardwareRenderDevice::renderToImage(Image* src_image, Rect& src, Image* dest_image, Rect& dest, bool dest_is_transparent) {
+int SdlHardwareRenderer::renderToImage(Image* src_image, SubArea& src, Image* dest_image, SubArea& dest, bool dest_is_transparent) {
 	if (!src_image || !dest_image)
 		return -1;
 
-	if (SDL_SetRenderTarget(renderer, static_cast<SDLHardwareImage *>(dest_image)->surface) != 0)
+	if (SDL_SetRenderTarget(renderer, static_cast<SdlHardwareImage *>(dest_image)->surface) != 0)
 		return -1;
 
 	if (dest_is_transparent) {
@@ -280,17 +260,17 @@ int SDLHardwareRenderDevice::renderToImage(Image* src_image, Rect& src, Image* d
     SDL_Rect _src = src;
     SDL_Rect _dest = dest;
 
-	SDL_SetTextureBlendMode(static_cast<SDLHardwareImage *>(dest_image)->surface, SDL_BLENDMODE_BLEND);
-	SDL_RenderCopy(renderer, static_cast<SDLHardwareImage *>(src_image)->surface, &_src, &_dest);
+	SDL_SetTextureBlendMode(static_cast<SdlHardwareImage *>(dest_image)->surface, SDL_BLENDMODE_BLEND);
+	SDL_RenderCopy(renderer, static_cast<SdlHardwareImage *>(src_image)->surface, &_src, &_dest);
 	SDL_SetRenderTarget(renderer, NULL);
 	return 0;
 }
 
-int SDLHardwareRenderDevice::renderText(
+int SdlHardwareRenderer::renderText(
 	TTF_Font *ttf_font,
 	const std::string& text,
 	Color color,
-	Rect& dest
+	SubArea& dest
 ) {
 	int ret = 0;
 	SDL_Texture *surface = NULL;
@@ -323,8 +303,8 @@ int SDLHardwareRenderDevice::renderText(
 	return ret;
 }
 
-Image * SDLHardwareRenderDevice::renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended) {
-	SDLHardwareImage *image = new SDLHardwareImage(this, renderer);
+Image * SdlHardwareRenderer::renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended) {
+	SdlHardwareImage *image = new SdlHardwareImage(this, renderer);
 
 	SDL_Surface *cleanup;
 
@@ -345,7 +325,7 @@ Image * SDLHardwareRenderDevice::renderTextToImage(TTF_Font* ttf_font, const std
 	return NULL;
 }
 
-void SDLHardwareRenderDevice::drawPixel(
+void SdlHardwareRenderer::drawPixel(
 	int x,
 	int y,
 	Uint32 color
@@ -363,7 +343,7 @@ void SDLHardwareRenderDevice::drawPixel(
 	SDL_RenderDrawPoint(renderer, x, y);
 }
 
-void SDLHardwareRenderDevice::drawLine(
+void SdlHardwareRenderer::drawLine(
 	int x0,
 	int y0,
 	int x1,
@@ -383,7 +363,7 @@ void SDLHardwareRenderDevice::drawLine(
 	SDL_RenderDrawLine(renderer, x0, y0, x1, y1);
 }
 
-void SDLHardwareRenderDevice::drawRectangle(
+void SdlHardwareRenderer::drawRectangle(
 	const Point& p0,
 	const Point& p1,
 	Uint32 color
@@ -394,18 +374,18 @@ void SDLHardwareRenderDevice::drawRectangle(
 	drawLine(p0.x, p1.y, p1.x, p1.y, color);
 }
 
-void SDLHardwareRenderDevice::blankScreen() {
+void SdlHardwareRenderer::blankScreen() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 	return;
 }
 
-void SDLHardwareRenderDevice::commitFrame() {
+void SdlHardwareRenderer::commitFrame() {
 	SDL_RenderPresent(renderer);
 	return;
 }
 
-void SDLHardwareRenderDevice::destroyContext() {
+void SdlHardwareRenderer::destroyContext() {
 	SDL_FreeSurface(titlebar_icon);
 	titlebar_icon = NULL;
 
@@ -423,7 +403,7 @@ void SDLHardwareRenderDevice::destroyContext() {
 	return;
 }
 
-Uint32 SDLHardwareRenderDevice::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
+Uint32 SdlHardwareRenderer::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
 	Uint32 u_format = SDL_GetWindowPixelFormat(screen);
 	SDL_PixelFormat* format = SDL_AllocFormat(u_format);
 
@@ -437,7 +417,7 @@ Uint32 SDLHardwareRenderDevice::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
 	}
 }
 
-Uint32 SDLHardwareRenderDevice::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+Uint32 SdlHardwareRenderer::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	Uint32 u_format = SDL_GetWindowPixelFormat(screen);
 	SDL_PixelFormat* format = SDL_AllocFormat(u_format);
 
@@ -454,9 +434,9 @@ Uint32 SDLHardwareRenderDevice::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 /**
  * create blank surface
  */
-Image *SDLHardwareRenderDevice::createImage(int width, int height) {
+Image *SdlHardwareRenderer::createImage(int width, int height) {
 
-	SDLHardwareImage *image = new SDLHardwareImage(this, renderer);
+	SdlHardwareImage *image = new SdlHardwareImage(this, renderer);
 
 	if (width > 0 && height > 0) {
 		image->surface = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, width, height);
@@ -475,28 +455,33 @@ Image *SDLHardwareRenderDevice::createImage(int width, int height) {
 	return image;
 }
 
-void SDLHardwareRenderDevice::setGamma(float g) {
+void SdlHardwareRenderer::setGamma(float g) {
 	Uint16 ramp[256];
 	SDL_CalculateGammaRamp(g, ramp);
 	SDL_SetWindowGammaRamp(screen, ramp, ramp, ramp);
 }
 
-void SDLHardwareRenderDevice::updateTitleBar() {
+void SdlHardwareRenderer::updateTitleBar() {
 	if (title) free(title);
 	title = NULL;
 	if (titlebar_icon) SDL_FreeSurface(titlebar_icon);
 	titlebar_icon = NULL;
 
 	if (!screen) return;
+	/*replacement of 	title = strdup("Game Window") due to c++11 not allowing it */
+	std::string title_s = "Game Window";
+	title = new char [title_s.size()+1];
+	std::copy(title_s.begin(), title_s.end(), title);
+	title[title_s.size()] = '\0';
 
-	title = strdup("Game Window");
+
 	titlebar_icon = IMG_Load("images/logo/icon.png");
 
 	if (title) SDL_SetWindowTitle(screen, title);
 	if (titlebar_icon) SDL_SetWindowIcon(screen, titlebar_icon);
 }
 
-void SDLHardwareRenderDevice::listModes(std::vector<Rect> &modes) {
+void SdlHardwareRenderer::listModes(std::vector<SubArea> &modes) {
 	int mode_count = SDL_GetNumDisplayModes(0);
 
 	for (int i=0; i<mode_count; i++) {
@@ -505,7 +490,7 @@ void SDLHardwareRenderDevice::listModes(std::vector<Rect> &modes) {
 
 		if (display_mode.w == 0 || display_mode.h == 0) continue;
 
-		Rect mode_rect;
+		SubArea mode_rect;
 		mode_rect.w = display_mode.w;
 		mode_rect.h = display_mode.h;
 		modes.push_back(mode_rect);
@@ -526,14 +511,14 @@ void SDLHardwareRenderDevice::listModes(std::vector<Rect> &modes) {
 	}
 }
 
-Image *SDLHardwareRenderDevice::loadImage(std::string filename, std::string errormessage, bool IfNotFoundExit) {
+Image *SdlHardwareRenderer::loadImage(std::string filename, std::string errormessage, bool IfNotFoundExit) {
 	// lookup image in cache
 	Image *img;
 	img = cacheLookup(filename);
 	if (img != NULL) return img;
 
 	// load image
-	SDLHardwareImage *image = new SDLHardwareImage(this, renderer);
+	SdlHardwareImage *image = new SdlHardwareImage(this, renderer);
 	if (!image) return NULL;
 
 	image->surface = IMG_LoadTexture(renderer, filename.c_str());
@@ -554,13 +539,13 @@ Image *SDLHardwareRenderDevice::loadImage(std::string filename, std::string erro
 	return image;
 }
 
-void SDLHardwareRenderDevice::freeImage(Image *image) {
+void SdlHardwareRenderer::freeImage(Image *image) {
 	if (!image) return;
 
 	cacheRemove(image);
 
-	if (static_cast<SDLHardwareImage *>(image)->surface) {
-		SDL_DestroyTexture(static_cast<SDLHardwareImage *>(image)->surface);
+	if (static_cast<SdlHardwareImage *>(image)->surface) {
+		SDL_DestroyTexture(static_cast<SdlHardwareImage *>(image)->surface);
 	}
 }
 

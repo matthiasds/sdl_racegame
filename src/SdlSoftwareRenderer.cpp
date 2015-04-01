@@ -1,51 +1,34 @@
-/*
-Copyright © 2013 Kurt Rinnert
-Copyright © 2013 Igor Paliychuk
-Copyright © 2014 Henrik Andersson
-
-This file is part of FLARE.
-
-FLARE is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation,
-either version 3 of the License, or (at your option) any later version.
-
-FLARE is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-FLARE.  If not, see http://www.gnu.org/licenses/
-*/
+#include "SdlSoftwareRenderer.h"
 
 #include <iostream>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 //#include "SDL2/SDL_gfxBlitFunc.h"
 
 //#include "SharedResources.h"
 #include "Settings.h"
 
-#include "SDLSoftwareRenderDevice.h"
 
-SDLSoftwareImage::SDLSoftwareImage(RenderDevice *_device)
+SdlSoftwareImage::SdlSoftwareImage(Renderer *_device)
 	: Image(_device)
 	, surface(NULL) {
 }
 
-SDLSoftwareImage::~SDLSoftwareImage() {
+SdlSoftwareImage::~SdlSoftwareImage() {
 }
 
-int SDLSoftwareImage::getWidth() const {
+int SdlSoftwareImage::getWidth() const {
 	return surface ? surface->w : 0;
 }
 
-int SDLSoftwareImage::getHeight() const {
+int SdlSoftwareImage::getHeight() const {
 	return surface ? surface->h : 0;
 }
 
-void SDLSoftwareImage::fillWithColor(Uint32 color) {
+void SdlSoftwareImage::fillWithColor(Uint32 color) {
 	if (!surface) return;
 
 	SDL_FillRect(surface, NULL, color);
@@ -58,7 +41,7 @@ void SDLSoftwareImage::fillWithColor(Uint32 color) {
  * Source: SDL Documentation
  * http://www.libsdl.org/docs/html/guidevideo.html
  */
-void SDLSoftwareImage::drawPixel(int x, int y, Uint32 pixel) {
+void SdlSoftwareImage::drawPixel(int x, int y, Uint32 pixel) {
 	if (!surface) return;
 
 	int bpp = surface->format->BytesPerPixel;
@@ -92,12 +75,12 @@ void SDLSoftwareImage::drawPixel(int x, int y, Uint32 pixel) {
 	}
 }
 
-Uint32 SDLSoftwareImage::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
+Uint32 SdlSoftwareImage::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
 	if (!surface) return 0;
 	return SDL_MapRGB(surface->format, r, g, b);
 }
 
-Uint32 SDLSoftwareImage::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+Uint32 SdlSoftwareImage::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	if (!surface) return 0;
 	return SDL_MapRGBA(surface->format, r, g, b, a);
 }
@@ -106,11 +89,11 @@ Uint32 SDLSoftwareImage::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
  * Resizes an image
  * Deletes the original image and returns a pointer to the resized version
  */
-Image* SDLSoftwareImage::resize(int width, int height) {
+Image* SdlSoftwareImage::resize(int width, int height) {
 	if(!surface || width <= 0 || height <= 0)
 		return NULL;
 
-	SDLSoftwareImage *scaled = new SDLSoftwareImage(device);
+	SdlSoftwareImage *scaled = new SdlSoftwareImage(device);
 
 	if (scaled) {
 		scaled->surface = SDL_CreateRGBSurface(surface->flags, width, height,
@@ -149,7 +132,7 @@ Image* SDLSoftwareImage::resize(int width, int height) {
 	return NULL;
 }
 
-Uint32 SDLSoftwareImage::readPixel(int x, int y) {
+Uint32 SdlSoftwareImage::readPixel(int x, int y) {
 	if (!surface) return 0;
 
 	SDL_LockSurface(surface);
@@ -186,7 +169,7 @@ Uint32 SDLSoftwareImage::readPixel(int x, int y) {
 	return pixel;
 }
 
-SDLSoftwareRenderDevice::SDLSoftwareRenderDevice()
+SdlSoftwareRenderer::SdlSoftwareRenderer()
 	: screen(NULL)
 #if SDL_VERSION_ATLEAST(2,0,0)
 	, window(NULL)
@@ -202,7 +185,7 @@ SDLSoftwareRenderDevice::SDLSoftwareRenderDevice()
 #endif
 }
 
-int SDLSoftwareRenderDevice::createContext(int width, int height) {
+int SdlSoftwareRenderer::createContext(int width, int height) {
 	if (is_initialized) {
 		destroyContext();
 	}
@@ -282,21 +265,21 @@ int SDLSoftwareRenderDevice::createContext(int width, int height) {
 	return (window_created ? 0 : -1);
 }
 
-Rect SDLSoftwareRenderDevice::getContextSize() {
-	Rect size;
+SubArea SdlSoftwareRenderer::getContextSize() {
+	SubArea size;
 	size.x = size.y = 0;
 	size.h = screen->h;
 	size.w = screen->w;
 	return size;
 }
 
-int SDLSoftwareRenderDevice::render(Renderable& r, Rect dest) {
-	SDL_Rect src = r.src;
+int SdlSoftwareRenderer::render(Renderable& r, SubArea dest) {
+	//SDL_Rect src = r.src;
 	SDL_Rect _dest = dest;
-	return SDL_BlitSurface(static_cast<SDLSoftwareImage *>(r.image)->surface, &src, screen, &_dest);
+	//return SDL_BlitSurface(static_cast<SDLSoftwareImage *>(r.image)->surface, &src, screen, &_dest);
 }
 
-int SDLSoftwareRenderDevice::render(Sprite *r) {
+int SdlSoftwareRenderer::render(Sprite *r) {
 	if (r == NULL) {
 		return -1;
 	}
@@ -307,10 +290,10 @@ int SDLSoftwareRenderDevice::render(Sprite *r) {
 
 	SDL_Rect src = m_clip;
 	SDL_Rect dest = m_dest;
-	return SDL_BlitSurface(static_cast<SDLSoftwareImage *>(r->getGraphics())->surface, &src, screen, &dest);
+	return SDL_BlitSurface(static_cast<SdlSoftwareImage *>(r->getGraphics())->surface, &src, screen, &dest);
 }
 
-int SDLSoftwareRenderDevice::renderToImage(Image* src_image, Rect& src, Image* dest_image, Rect& dest, bool dest_is_transparent) {
+int SdlSoftwareRenderer::renderToImage(Image* src_image, SubArea& src, Image* dest_image, SubArea& dest, bool dest_is_transparent) {
 	if (!src_image || !dest_image) return -1;
 
 	SDL_Rect _src = src;
@@ -325,11 +308,11 @@ int SDLSoftwareRenderDevice::renderToImage(Image* src_image, Rect& src, Image* d
 	return 1; //temp vervanging
 }
 
-int SDLSoftwareRenderDevice::renderText(
+int SdlSoftwareRenderer::renderText(
 	TTF_Font *ttf_font,
 	const std::string& text,
 	Color color,
-	Rect& dest
+	SubArea& dest
 ) {
 	int ret = 0;
 	SDL_Color _color = color;
@@ -347,8 +330,8 @@ int SDLSoftwareRenderDevice::renderText(
 	return ret;
 }
 
-Image* SDLSoftwareRenderDevice::renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended) {
-	SDLSoftwareImage *image = new SDLSoftwareImage(this);
+Image* SdlSoftwareRenderer::renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended) {
+	SdlSoftwareImage *image = new SdlSoftwareImage(this);
 	if (!image) return NULL;
 
 	SDL_Color _color = color;
@@ -365,7 +348,7 @@ Image* SDLSoftwareRenderDevice::renderTextToImage(TTF_Font* ttf_font, const std:
 	return NULL;
 }
 
-void SDLSoftwareRenderDevice::drawPixel(
+void SdlSoftwareRenderer::drawPixel(
 	int x,
 	int y,
 	Uint32 color
@@ -409,7 +392,7 @@ void SDLSoftwareRenderDevice::drawPixel(
 	return;
 }
 
-void SDLSoftwareRenderDevice::drawLine(
+void SdlSoftwareRenderer::drawLine(
 	int x0,
 	int y0,
 	int x1,
@@ -441,7 +424,7 @@ void SDLSoftwareRenderDevice::drawLine(
 	while(x0 != x1 || y0 != y1);
 }
 
-void SDLSoftwareRenderDevice::drawRectangle(
+void SdlSoftwareRenderer::drawRectangle(
 	const Point& p0,
 	const Point& p1,
 	Uint32 color
@@ -458,12 +441,12 @@ void SDLSoftwareRenderDevice::drawRectangle(
 	}
 }
 
-void SDLSoftwareRenderDevice::blankScreen() {
+void SdlSoftwareRenderer::blankScreen() {
 	SDL_FillRect(screen, NULL, 0);
 	return;
 }
 
-void SDLSoftwareRenderDevice::commitFrame() {
+void SdlSoftwareRenderer::commitFrame() {
 #if SDL_VERSION_ATLEAST(2,0,0)
 	SDL_UpdateTexture(texture, NULL, screen->pixels, screen->pitch);
 	SDL_RenderClear(renderer);
@@ -475,7 +458,7 @@ void SDLSoftwareRenderDevice::commitFrame() {
 	return;
 }
 
-void SDLSoftwareRenderDevice::destroyContext() {
+void SdlSoftwareRenderer::destroyContext() {
 	if (title) {
 		free(title);
 		title = NULL;
@@ -506,11 +489,11 @@ void SDLSoftwareRenderDevice::destroyContext() {
 	return;
 }
 
-Uint32 SDLSoftwareRenderDevice::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
+Uint32 SdlSoftwareRenderer::MapRGB(Uint8 r, Uint8 g, Uint8 b) {
 	return SDL_MapRGB(screen->format, r, g, b);
 }
 
-Uint32 SDLSoftwareRenderDevice::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+Uint32 SdlSoftwareRenderer::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	return SDL_MapRGBA(screen->format, r, g, b, a);
 }
 
@@ -518,9 +501,9 @@ Uint32 SDLSoftwareRenderDevice::MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
  * create blank surface
  * based on example: http://www.libsdl.org/docs/html/sdlcreatergbsurface.html
  */
-Image *SDLSoftwareRenderDevice::createImage(int width, int height) {
+Image *SdlSoftwareRenderer::createImage(int width, int height) {
 
-	SDLSoftwareImage *image = new SDLSoftwareImage(this);
+	SdlSoftwareImage *image = new SdlSoftwareImage(this);
 
 	if (!image)
 		return NULL;
@@ -555,7 +538,7 @@ Image *SDLSoftwareRenderDevice::createImage(int width, int height) {
 	return image;
 }
 
-void SDLSoftwareRenderDevice::setGamma(float g) {
+void SdlSoftwareRenderer::setGamma(float g) {
 #if SDL_VERSION_ATLEAST(2,0,0)
 	Uint16 ramp[256];
 	SDL_CalculateGammaRamp(g, ramp);
@@ -565,27 +548,30 @@ void SDLSoftwareRenderDevice::setGamma(float g) {
 #endif
 }
 
-void SDLSoftwareRenderDevice::updateTitleBar() {
+void SdlSoftwareRenderer::updateTitleBar() {
 	if (title) free(title);
 	if (titlebar_icon) SDL_FreeSurface(titlebar_icon);
 
-#if SDL_VERSION_ATLEAST(2,0,0)
-	if (!window) return;
-#endif
 
-	title = strdup("Game Window");
+	if (!window) return;
+
+
+	if (!screen) return;
+
+	/*replacement of 	title = strdup("Game Window") due to c++11 not allowing it */
+	std::string title_s = "Game Window";
+	title = new char [title_s.size()+1];
+	std::copy(title_s.begin(), title_s.end(), title);
+	title[title_s.size()] = '\0';
+
 	titlebar_icon = IMG_Load("images/logo/icon.png");
 
-#if SDL_VERSION_ATLEAST(2,0,0)
+
 	if (title) SDL_SetWindowTitle(window, title);
 	if (titlebar_icon) SDL_SetWindowIcon(window, titlebar_icon);
-#else
-	if (title) SDL_WM_SetCaption(title, title);
-	if (titlebar_icon) SDL_WM_SetIcon(titlebar_icon, NULL);
-#endif
 }
 
-void SDLSoftwareRenderDevice::listModes(std::vector<Rect> &modes) {
+void SdlSoftwareRenderer::listModes(std::vector<SubArea> &modes) {
 #if SDL_VERSION_ATLEAST(2,0,0)
 	int mode_count = SDL_GetNumDisplayModes(0);
 
@@ -595,7 +581,7 @@ void SDLSoftwareRenderDevice::listModes(std::vector<Rect> &modes) {
 
 		if (display_mode.w == 0 || display_mode.h == 0) continue;
 
-		Rect mode_rect;
+		SubArea mode_rect;
 		mode_rect.w = display_mode.w;
 		mode_rect.h = display_mode.h;
 		modes.push_back(mode_rect);
@@ -629,7 +615,7 @@ void SDLSoftwareRenderDevice::listModes(std::vector<Rect> &modes) {
 	}
 
 	for (unsigned i=0; detect_modes[i]; ++i) {
-		modes.push_back(Rect(*detect_modes[i]));
+		modes.push_back(SubArea(*detect_modes[i]));
 		if (detect_modes[i]->w < MIN_VIEW_W || detect_modes[i]->h < MIN_VIEW_H) {
 			// make sure the resolution fits in the constraints of MIN_VIEW_W and MIN_VIEW_H
 			modes.pop_back();
@@ -648,14 +634,14 @@ void SDLSoftwareRenderDevice::listModes(std::vector<Rect> &modes) {
 }
 
 
-Image *SDLSoftwareRenderDevice::loadImage(std::string filename, std::string errormessage, bool IfNotFoundExit) {
+Image *SdlSoftwareRenderer::loadImage(std::string filename, std::string errormessage, bool IfNotFoundExit) {
 	// lookup image in cache
 	Image *img;
 	img = cacheLookup(filename);
 	if (img != NULL) return img;
 
 	// load image
-	SDLSoftwareImage *image;
+	SdlSoftwareImage *image;
 	image = NULL;
 	SDL_Surface *cleanup = IMG_Load(filename.c_str());
 	if(!cleanup) {
@@ -667,12 +653,9 @@ Image *SDLSoftwareRenderDevice::loadImage(std::string filename, std::string erro
 		}
 	}
 	else {
-		image = new SDLSoftwareImage(this);
-#if SDL_VERSION_ATLEAST(2,0,0)
+		image = new SdlSoftwareImage(this);
 		image->surface = SDL_ConvertSurfaceFormat(cleanup, SDL_PIXELFORMAT_ARGB8888, 0);
-#else
-		image->surface = SDL_DisplayFormatAlpha(cleanup);
-#endif
+
 		SDL_FreeSurface(cleanup);
 	}
 
@@ -681,16 +664,16 @@ Image *SDLSoftwareRenderDevice::loadImage(std::string filename, std::string erro
 	return image;
 }
 
-void SDLSoftwareRenderDevice::freeImage(Image *image) {
+void SdlSoftwareRenderer::freeImage(Image *image) {
 	if (!image) return;
 
 	cacheRemove(image);
 
-	if (static_cast<SDLSoftwareImage *>(image)->surface)
-		SDL_FreeSurface(static_cast<SDLSoftwareImage *>(image)->surface);
+	if (static_cast<SdlSoftwareImage *>(image)->surface)
+		SDL_FreeSurface(static_cast<SdlSoftwareImage *>(image)->surface);
 }
 
-void SDLSoftwareRenderDevice::setSDL_RGBA(Uint32 *rmask, Uint32 *gmask, Uint32 *bmask, Uint32 *amask) {
+void SdlSoftwareRenderer::setSDL_RGBA(Uint32 *rmask, Uint32 *gmask, Uint32 *bmask, Uint32 *amask) {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	*rmask = 0xff000000;
 	*gmask = 0x00ff0000;

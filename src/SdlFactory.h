@@ -9,13 +9,15 @@
 #define SDLFACTORY_H_
 
 #include "SdlCar.h"
+#include "SdlRoad.h"
 #include "EntityFactory.h"
 
 class SdlFactory : public EntityFactory {
 public:
 	SdlFactory();
 	virtual ~SdlFactory();
-	virtual Car* createCar(RenderDevice* renderer) override;
+	virtual Car* createCar(Renderer* renderer) override;
+	virtual Road* createRoad(Renderer* renderer) override;
 };
 
 #endif /* SDLFACTORY_H_ */

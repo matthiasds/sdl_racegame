@@ -38,7 +38,7 @@ Created and destroyed by main.cpp
 #include "MessageEngine.h"
 #include "ModManager.h"
 #include "SoundManager.h"
-#include "RenderDevice.h"
+#include "Renderer.h"
 
 extern SDL_Joystick *joy;
 

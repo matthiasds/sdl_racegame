@@ -1,22 +1,4 @@
-/*
-Copyright © 2011-2012 Clint Bellanger
-Copyright © 2012 Stefan Beller
-Copyright © 2013 Henrik Andersson
-Copyright © 2013 Kurt Rinnert
 
-This file is part of FLARE.
-
-FLARE is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation,
-either version 3 of the License, or (at your option) any later version.
-
-FLARE is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-FLARE.  If not, see http://www.gnu.org/licenses/
-*/
 
 /**
  * Utils
@@ -46,11 +28,11 @@ public:
 	FPoint(float _x, float _y) : x(_x), y(_y) {}
 };
 
-class Rect {
+class SubArea {
 public:
 	int x, y, w, h;
-	Rect() : x(0), y(0), w(0), h(0) {}
-	Rect(SDL_Rect _r) : x(_r.x), y(_r.y), w(_r.w), h(_r.h) {}
+	SubArea() : x(0), y(0), w(0), h(0) {}
+	SubArea(SDL_Rect _r) : x(_r.x), y(_r.y), w(_r.w), h(_r.h) {}
 	operator SDL_Rect() {
 		SDL_Rect r;
 		r.x = x;
@@ -142,10 +124,10 @@ float calcTheta(float x1, float y1, float x2, float y2);
 int calcDirection(float x0, float y0, float x1, float y1);
 int calcDirection(const FPoint &src, const FPoint &dst);
 bool isWithin(FPoint center, float radius, FPoint target);
-bool isWithin(Rect r, Point target);
+bool isWithin(SubArea r, Point target);
 
 std::string abbreviateKilo(int amount);
-void alignToScreenEdge(std::string alignment, Rect *r);
+void alignToScreenEdge(std::string alignment, SubArea *r);
 void alignFPoint(FPoint *pos);
 
 void logInfo(const char* format, ...);

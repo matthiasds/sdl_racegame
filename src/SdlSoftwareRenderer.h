@@ -20,7 +20,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #ifndef SDLSOFTWARERENDERDEVICE_H
 #define SDLSOFTWARERENDERDEVICE_H
 
-#include "RenderDevice.h"
+#include "Renderer.h"
 
 /** Provide rendering device using SDL_BlitSurface backend.
  *
@@ -30,19 +30,14 @@ FLARE.  If not, see http://www.gnu.org/licenses/
  * As this is for the FLARE engine, the implementation uses the engine's
  * global settings context, which is included by the interface.
  *
- * @class SDLSoftwareRenderDevice
- * @see RenderDevice
- * @author Kurt Rinnert
- * @date 2013-07-06
- *
  */
 
 
 /** SDL Image */
-class SDLSoftwareImage : public Image {
+class SdlSoftwareImage : public Image {
 public:
-	SDLSoftwareImage(RenderDevice *device);
-	virtual ~SDLSoftwareImage();
+	SdlSoftwareImage(Renderer *device);
+	virtual ~SdlSoftwareImage();
 	int getWidth() const;
 	int getHeight() const;
 
@@ -58,19 +53,19 @@ private:
 	Uint32 readPixel(int x, int y);
 };
 
-class SDLSoftwareRenderDevice : public RenderDevice {
+class SdlSoftwareRenderer : public Renderer {
 
 public:
 
-	SDLSoftwareRenderDevice();
+	SdlSoftwareRenderer();
 	int createContext(int width, int height);
-	Rect getContextSize();
+	SubArea getContextSize();
 
-	virtual int render(Renderable& r, Rect dest);
+	virtual int render(Renderable& r, SubArea dest);
 	virtual int render(Sprite* r);
-	virtual int renderToImage(Image* src_image, Rect& src, Image* dest_image, Rect& dest, bool dest_is_transparent = false);
+	virtual int renderToImage(Image* src_image, SubArea& src, Image* dest_image, SubArea& dest, bool dest_is_transparent = false);
 
-	int renderText(TTF_Font *ttf_font, const std::string& text, Color color, Rect& dest);
+	int renderText(TTF_Font *ttf_font, const std::string& text, Color color, SubArea& dest);
 	Image* renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended = true);
 	void drawPixel(int x, int y, Uint32 color);
 	void drawRectangle(const Point& p0, const Point& p1, Uint32 color);
@@ -82,7 +77,7 @@ public:
 	Image *createImage(int width, int height);
 	void setGamma(float g);
 	void updateTitleBar();
-	void listModes(std::vector<Rect> &modes);
+	void listModes(std::vector<SubArea> &modes);
 	void freeImage(Image *image);
 
 	Image* loadImage(std::string filename,

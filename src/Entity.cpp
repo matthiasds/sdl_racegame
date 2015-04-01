@@ -7,14 +7,32 @@
 
 #include "Entity.h"
 
-Entity::Entity(RenderDevice* renderer) {
-	this->renderer = renderer;
+Entity::Entity() :
+ pos()
+, prio(0) {
+
 }
 
 Entity::~Entity() {
 	// TODO Auto-generated destructor stub
 }
 
-Renderable* Entity::getEntityRender() const {
-	return entityRender;
+
+
+FPoint Entity::getPos() const {
+	return pos;
 }
+
+
+uint32_t Entity::getPrio() const {
+	return prio;
+}
+
+void Entity::setRenderer(Renderer* renderer) {
+	this->renderer=renderer;
+}
+
+Renderer* Entity::getRenderer() const {
+	return renderer;
+}
+
