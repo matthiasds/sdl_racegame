@@ -16,8 +16,19 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.220420656" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug.1879816272" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
-							<builder buildPath="${workspace_loc:/Game}/Debug" id="cdt.managedbuild.tool.gnu.builder.mingw.base.1620360792" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
+							<builder buildPath="${workspace_loc:/Game}/Debug" id="cdt.managedbuild.tool.gnu.builder.mingw.base.1620360792" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Release"/>
+								</outputEntries>
+							</builder>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.2066504" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug">
+								<option id="gnu.both.asm.option.include.paths.515049038" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.710652816" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.2040029330" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base"/>
@@ -25,19 +36,37 @@
 								<option id="gnu.cpp.compiler.mingw.exe.debug.option.optimization.level.1865396489" name="Optimization Level" superClass="gnu.cpp.compiler.mingw.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level.604346805" name="Debug Level" superClass="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.129499742" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.include.files.1550700534" name="Include files (-include)" superClass="gnu.cpp.compiler.option.include.files" valueType="includeFiles">
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include\SDL2\SDL.h&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include\SDL2\SDL_image.h&quot;"/>
-									<listOptionValue builtIn="false" value=""/>
+								<option id="gnu.cpp.compiler.option.include.files.1550700534" name="Include files (-include)" superClass="gnu.cpp.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL.h"/>
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL_image.h"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.dialect.std.535493032" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.c++1y" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.dialect.std.535493032" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.c++1y" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.dialect.flags.152821593" name="Other dialect flags" superClass="gnu.cpp.compiler.option.dialect.flags" useByScannerDiscovery="true" value="-std=c++0x" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.64511255" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.mingw.exe.debug.option.optimization.level.208945261" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.404041453" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.include.paths.1607792488" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
+								<option id="gnu.c.compiler.option.include.files.1055157257" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL.h"/>
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL_image.h"/>
+								</option>
+								<option id="gnu.c.compiler.option.dialect.std.1388476988" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1998065128" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="_GLIBCXX_USE_C99_STDINT_TR1"/>
+									<listOptionValue builtIn="false" value="&quot;__cplusplus = 201103L&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1149427894" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1816828300" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug"/>
@@ -50,10 +79,7 @@
 									<listOptionValue builtIn="false" value="SDL2_image"/>
 									<listOptionValue builtIn="false" value="sdl2_mixer"/>
 								</option>
-								<option id="gnu.cpp.link.option.paths.576442485" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\lib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\GnuWin32\lib&quot;"/>
-								</option>
+								<option id="gnu.cpp.link.option.paths.576442485" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1072764821" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -61,11 +87,153 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1163688757" name="Menu.h" rcbsApplicability="disable" resourcePath="src/Menu.h" toolsToInvoke=""/>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1207904605" name="/" resourcePath="include">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1400867972" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.561701942" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.2066504">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1030248821" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.705498026" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.2040029330"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.928348324" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.545777373" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.2070917730" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939">
+								<option id="gnu.c.compiler.option.include.files.2129044395" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL.h"/>
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL_image.h"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.314505369" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.932667183" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1816828300"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1456832095" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1281518757"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.397956309" name="/" resourcePath="components">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.851286839" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.812804328" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.2066504">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1320977909" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1150110263" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.2040029330"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.723092915" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157">
+								<option id="gnu.cpp.compiler.option.include.paths.929960128" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RaceGame/RaceGame/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1936827273" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1897621776" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939">
+								<option id="gnu.c.compiler.option.include.files.674223798" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL.h"/>
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL_image.h"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.349162055" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1003923303" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1816828300"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.2865237" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1281518757"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1258510874" name="/" resourcePath="src">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1012321999" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1447876796" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.2066504">
+								<option id="gnu.both.asm.option.include.paths.1609514826" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RaceGame/RaceGame/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.393926528" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1434823111" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.2040029330"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1795489062" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157">
+								<option id="gnu.cpp.compiler.option.include.paths.197967658" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.include.files.1006478821" name="Include files (-include)" superClass="gnu.cpp.compiler.option.include.files" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL.h"/>
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL_image.h"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1142142924" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1901209009" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939">
+								<option id="gnu.c.compiler.option.include.files.990739799" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL.h"/>
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL_image.h"/>
+								</option>
+								<option id="gnu.c.compiler.option.include.paths.466271333" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1375194118" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1924565790" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1816828300"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1860661278" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1281518757"/>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.6789611" name="PhysicsComponent.h" rcbsApplicability="disable" resourcePath="src/PhysicsComponent.h" toolsToInvoke=""/>
 					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1854227024" name="GameRenderer.h" rcbsApplicability="disable" resourcePath="src/GameRenderer.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.2077564383" name="RoadGraphicsComponent.h" rcbsApplicability="disable" resourcePath="src/RoadGraphicsComponent.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1337291949" name="SdlRoad.h" rcbsApplicability="disable" resourcePath="src/SdlRoad.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.817699494" name="SdlCar.h" rcbsApplicability="disable" resourcePath="src/SdlCar.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.2146934882" name="RoadPhysicsComponent.h" rcbsApplicability="disable" resourcePath="src/RoadPhysicsComponent.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1408579403" name="RoadInputComponent.h" rcbsApplicability="disable" resourcePath="src/RoadInputComponent.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.648485843" name="Road.h" rcbsApplicability="disable" resourcePath="src/Road.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1988631071" name="CarPhysicsComponent.h" rcbsApplicability="disable" resourcePath="src/CarPhysicsComponent.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1779208247" name="CarInputComponent.h" rcbsApplicability="disable" resourcePath="src/CarInputComponent.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.329132943" name="IRenderable.h" rcbsApplicability="disable" resourcePath="src/IRenderable.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1163688757" name="Menu.h" rcbsApplicability="disable" resourcePath="src/Menu.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1240944433" name="Car.h" rcbsApplicability="disable" resourcePath="src/Car.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.66253347" name="GraphicsComponent.h" rcbsApplicability="disable" resourcePath="src/GraphicsComponent.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.697065452" name="GameStateMachine.h" rcbsApplicability="disable" resourcePath="src/GameStateMachine.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.988988841" name="BackgroundRenderProcess.h" rcbsApplicability="disable" resourcePath="src/BackgroundRenderProcess.h" toolsToInvoke=""/>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.29441079" name="CarGraphicsComponent.h" rcbsApplicability="disable" resourcePath="src/CarGraphicsComponent.h" toolsToInvoke=""/>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.2128988628" name="/" resourcePath="systems">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.490254010" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.652515557" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.2066504">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.811920245" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.2105179318" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.2040029330"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.880717168" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157">
+								<option id="gnu.cpp.compiler.option.include.paths.1235418506" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.445711113" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1942117694" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939">
+								<option id="gnu.c.compiler.option.include.paths.1130691826" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="../RaceGame/RaceGame/include"/>
+									<listOptionValue builtIn="false" value="../RaceGame/components"/>
+									<listOptionValue builtIn="false" value="../RaceGame/systems"/>
+								</option>
+								<option id="gnu.c.compiler.option.include.files.1269117087" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL.h"/>
+									<listOptionValue builtIn="false" value="C:/MinGW/include/SDL2/SDL_image.h"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1155042997" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1218058156" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1816828300"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1170629240" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1281518757"/>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1617872669" name="RenderSystem.h" rcbsApplicability="disable" resourcePath="systems/SdlRenderSystem.h" toolsToInvoke=""/>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="components"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
-						<entry excluding="Menu.h|Menu.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="InputComponent.h|GraphicsComponent.h|RoadInputComponent.h|RoadPhysicsComponent.cpp|RoadGraphicsComponent.h|RoadGraphicsComponent.cpp|RoadPhysicsComponent.h|RoadInputComponent.cpp|GameStateMachine.cpp|GameStateMachine.h|IRenderable.h|SystemFactory.cpp|GameRenderer.cpp|Road.h|GameRenderer.h|CarGraphicsComponent.h|PhysicsComponent.h|systems|CarPhysicsComponent.cpp|Menu.cpp|BackgroundRenderProcess.cpp|SdlCar.cpp|CarInputComponent.cpp|CarGraphicsComponent.cpp|SdlCar.h|Menu.h|CarPhysicsComponent.h|Car.cpp|Car.h|BackgroundRenderProcess.h|CarInputComponent.h|SdlRoad.cpp|SdlRoad.h|Road.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="systems"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -111,7 +279,9 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="components"/>
+						<entry excluding="systems|components" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="systems"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -121,12 +291,21 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="Game.cdt.managedbuild.target.gnu.mingw.exe.525060729" name="Executable" projectType="cdt.managedbuild.target.gnu.mingw.exe"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="FOLDER" workspacePath="/RaceGame/src"/>
+			<resource resourceType="PROJECT" workspacePath="/RaceGame"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/Game"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505;cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.622187157;cdt.managedbuild.tool.gnu.cpp.compiler.input.64511255">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505;cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.;cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939;cdt.managedbuild.tool.gnu.c.compiler.input.1149427894">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.release.1898273936;cdt.managedbuild.config.gnu.mingw.exe.release.1898273936.;cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.release.554944677;cdt.managedbuild.tool.gnu.c.compiler.input.1610139652">
@@ -135,15 +314,8 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.release.1898273936;cdt.managedbuild.config.gnu.mingw.exe.release.1898273936.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.release.1750475189;cdt.managedbuild.tool.gnu.cpp.compiler.input.1863978825">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505;cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.;cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.51886939;cdt.managedbuild.tool.gnu.c.compiler.input.1149427894">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/Game"/>
-		</configuration>
-		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/Game"/>
-		</configuration>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

@@ -9,6 +9,7 @@
 #define SPRITE_H_
 
 #include "Utils.h"
+#include <vector>
 
 class Image;
 
@@ -27,26 +28,29 @@ class Image;
  *
  *
  */
+
 class Sprite {
 
 public:
 	virtual ~Sprite();
 
-	SubArea local_frame;
+
 
 	virtual Image * getGraphics();
 	//virtual void setOffset();
 	virtual void setOffset(const Point& _offset);
 	virtual void setOffset(const int x, const int y);
-	virtual Point getOffset();
-	virtual void setClip(const SubArea& clip);
+	virtual std::vector<Point>& getOffset();
+	void addExtraRenderOffset(const int x, const int y);
+	void clearExtraRenderOffsets();
+	virtual void setClip(const Rect& clip);
 	virtual void setClip(const int x, const int y, const int w, const int h);
 	virtual void setClipX(const int x);
 	virtual void setClipY(const int y);
 	virtual void setClipW(const int w);
 	virtual void setClipH(const int h);
-	virtual SubArea getClip();
-	virtual void setDest(const SubArea& _dest);
+	virtual Rect getClip();
+	virtual void setDest(const Rect& _dest);
 	virtual void setDest(const Point& _dest);
 	virtual void setDest(int x, int y);
 	virtual void setDestX(int x);
@@ -54,16 +58,29 @@ public:
 	virtual FPoint getDest();
 	virtual int getGraphicsWidth();
 	virtual int getGraphicsHeight();
+	const Rect& getRenderArea() const;
+	void setRenderArea(const Rect& renderArea);
+	bool isActive() const;
+	void setActive(bool active);
+	const Rect& getTextureRenderBox() const;
+	void setTextureRenderBox(const Rect& textureRenderBox);
+
 private:
-	Sprite(Image *);
+	Sprite(Image *,  Rect renderArea);
 	friend class Image;
 
 protected:
+	Rect renderArea; //subwindow whereto the sprite is rendered (cliping is based on this subwindow)
 	/** reference to source image */
 	Image *image;
-	SubArea src; // location on the sprite in pixel coordinates.
-	Point offset;      // offset from map_pos to topleft corner of sprite
+	Rect src; // location on the sprite in pixel coordinates.
+	//sprite has support for multiple offsets to enable rendering a texture multiple times at once on different postion.
+
+	//give vector multiple offsets to be able to render the sprite multiple times for backgrounds or particles
+	std::vector<Point> offset;      // offset from map_pos to topleft corner of sprite
 	FPoint dest;
+	bool active;  //boolean to temporary disable rendering
+	Rect textureRenderBox;
 };
 
 

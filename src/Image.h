@@ -45,10 +45,11 @@ public:
 	virtual Uint32 MapRGB(Uint8 r, Uint8 g, Uint8 b) = 0;
 	virtual Uint32 MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) = 0;
 	virtual Image* resize(int width, int height) = 0;
+	virtual bool getAlphaXY(int x, int y) = 0;
 
-	class Sprite *createSprite(bool clipToSize = true);
-	float getDestinationScaleFactor() const;
-	void setDestinationScaleFactor(float destinationScaleFactor);
+
+	class Sprite *createSprite(bool clipToSize, Rect renderArea);
+	Renderer* getRenderer() const;
 
 private:
 	Image(Renderer *device);
@@ -59,7 +60,6 @@ private:
 private:
 	Renderer *device;
 	uint32_t ref_counter;
-	float destinationScaleFactor;
 };
 
 #endif /* IMAGE_H_ */

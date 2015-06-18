@@ -11,6 +11,8 @@
 SdlCar::SdlCar(Renderer *renderer) : carImage(NULL)
  {
 	setRenderer(renderer);
+	/*geef gewoon image array als argument en niet renderer en laat bovenliggende classe immage toevoegen aan renderable */
+	/*reduce coupling */
 	carImage=getRenderer()->loadImage(PATH_CAR1);
 	SDL_Rect car_image_area;
 	car_image_area.h=640;

@@ -132,6 +132,10 @@ Image* SdlSoftwareImage::resize(int width, int height) {
 	return NULL;
 }
 
+
+
+
+
 Uint32 SdlSoftwareImage::readPixel(int x, int y) {
 	if (!surface) return 0;
 
@@ -167,6 +171,19 @@ Uint32 SdlSoftwareImage::readPixel(int x, int y) {
 
 	SDL_UnlockSurface(surface);
 	return pixel;
+}
+
+bool SdlSoftwareImage::getAlphaXY(int x, int y)
+{
+	if (!surface) return 0;
+
+	/*Get the requested pixel */
+	Uint32 pixelColor = readPixel(x, y);
+
+	Uint8 red, green, blue, alpha;
+	SDL_GetRGBA(pixelColor, surface->format, &red, &green, &blue, &alpha);
+
+	return alpha > 200;
 }
 
 SdlSoftwareRenderer::SdlSoftwareRenderer()
@@ -265,18 +282,18 @@ int SdlSoftwareRenderer::createContext(int width, int height) {
 	return (window_created ? 0 : -1);
 }
 
-SubArea SdlSoftwareRenderer::getContextSize() {
-	SubArea size;
+Rect SdlSoftwareRenderer::getContextSize() {
+	Rect size;
 	size.x = size.y = 0;
 	size.h = screen->h;
 	size.w = screen->w;
 	return size;
 }
 
-int SdlSoftwareRenderer::render(Renderable& r, SubArea dest) {
-	//SDL_Rect src = r.src;
+int SdlSoftwareRenderer::render(Image *image, Rect src, Rect dest) {
+	SDL_Rect _src = src;
 	SDL_Rect _dest = dest;
-	//return SDL_BlitSurface(static_cast<SDLSoftwareImage *>(r.image)->surface, &src, screen, &_dest);
+	return SDL_BlitSurface(static_cast<SdlSoftwareImage *>(image)->surface, &_src, screen, &_dest);
 }
 
 int SdlSoftwareRenderer::render(Sprite *r) {
@@ -284,16 +301,16 @@ int SdlSoftwareRenderer::render(Sprite *r) {
 		return -1;
 	}
 
-	if ( !localToGlobal(r) ) {
+	if ( !renderAreaConversion(r,0) ) {
 		return -1;
 	}
 
-	SDL_Rect src = m_clip;
+	SDL_Rect src = destClip;
 	SDL_Rect dest = m_dest;
 	return SDL_BlitSurface(static_cast<SdlSoftwareImage *>(r->getGraphics())->surface, &src, screen, &dest);
 }
 
-int SdlSoftwareRenderer::renderToImage(Image* src_image, SubArea& src, Image* dest_image, SubArea& dest, bool dest_is_transparent) {
+int SdlSoftwareRenderer::renderToImage(Image* src_image, Rect& src, Image* dest_image, Rect& dest, bool dest_is_transparent) {
 	if (!src_image || !dest_image) return -1;
 
 	SDL_Rect _src = src;
@@ -308,12 +325,7 @@ int SdlSoftwareRenderer::renderToImage(Image* src_image, SubArea& src, Image* de
 	return 1; //temp vervanging
 }
 
-int SdlSoftwareRenderer::renderText(
-	TTF_Font *ttf_font,
-	const std::string& text,
-	Color color,
-	SubArea& dest
-) {
+int SdlSoftwareRenderer::renderText(TTF_Font *ttf_font, const std::string& text, Color color, Rect& dest) {
 	int ret = 0;
 	SDL_Color _color = color;
 
@@ -348,41 +360,38 @@ Image* SdlSoftwareRenderer::renderTextToImage(TTF_Font* ttf_font, const std::str
 	return NULL;
 }
 
-void SdlSoftwareRenderer::drawPixel(
-	int x,
-	int y,
-	Uint32 color
-) {
+void SdlSoftwareRenderer::drawPixel(int x, int y, Color color) {
 	int bpp = screen->format->BytesPerPixel;
 	/* Here p is the address to the pixel we want to set */
 	Uint8 *p = (Uint8 *)screen->pixels + y * screen->pitch + x * bpp;
 
+	uint32_t _color = MapRGBA(color.r, color.g, color.b, color.a);
 	if (SDL_MUSTLOCK(screen)) {
 		SDL_LockSurface(screen);
 	}
 	switch(bpp) {
 		case 1:
-			*p = color;
+			*p = _color;
 			break;
 
 		case 2:
-			*(Uint16 *)p = color;
+			*(Uint16 *)p = _color;
 			break;
 
 		case 3:
 #if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			p[0] = (color >> 16) & 0xff;
-			p[1] = (color >> 8) & 0xff;
-			p[2] = color & 0xff;
+			p[0] = (_color >> 16) & 0xff;
+			p[1] = (_color >> 8) & 0xff;
+			p[2] = _color & 0xff;
 #else
-			p[0] = color & 0xff;
-			p[1] = (color >> 8) & 0xff;
-			p[2] = (color >> 16) & 0xff;
+			p[0] = _color & 0xff;
+			p[1] = (_color >> 8) & 0xff;
+			p[2] = (_color) & 0xff;
 #endif
 			break;
 
 		case 4:
-			*(Uint32 *)p = color;
+			*(Uint32 *)p = _color;
 			break;
 	}
 	if (SDL_MUSTLOCK(screen)) {
@@ -392,13 +401,7 @@ void SdlSoftwareRenderer::drawPixel(
 	return;
 }
 
-void SdlSoftwareRenderer::drawLine(
-	int x0,
-	int y0,
-	int x1,
-	int y1,
-	Uint32 color
-) {
+void SdlSoftwareRenderer::drawLine(int x0,int y0,int x1,int y1,Color color) {
 	const int dx = abs(x1-x0);
 	const int dy = abs(y1-y0);
 	const int sx = x0 < x1 ? 1 : -1;
@@ -424,11 +427,7 @@ void SdlSoftwareRenderer::drawLine(
 	while(x0 != x1 || y0 != y1);
 }
 
-void SdlSoftwareRenderer::drawRectangle(
-	const Point& p0,
-	const Point& p1,
-	Uint32 color
-) {
+void SdlSoftwareRenderer::drawRectangle(const Point& p0,const Point& p1,Color color) {
 	if (SDL_MUSTLOCK(screen)) {
 		SDL_LockSurface(screen);
 	}
@@ -438,6 +437,30 @@ void SdlSoftwareRenderer::drawRectangle(
 	this->drawLine(p0.x, p1.y, p1.x, p1.y, color);
 	if (SDL_MUSTLOCK(screen)) {
 		SDL_UnlockSurface(screen);
+	}
+}
+
+
+/*not tested*/
+void SdlSoftwareRenderer::drawFilledRectangle(const Point& p0, const Point& p1, Color color) {
+	if (SDL_MUSTLOCK(screen)) {
+			SDL_LockSurface(screen);
+	}
+	int y = p0.y;
+	do {
+		this->drawLine(p0.x, y, p1.x, y, color);
+		if (p1.y > p0.y) {
+			y++;
+		}
+		else {
+			y--;
+		}
+	}
+	while(y != p1.y);
+
+
+	if (SDL_MUSTLOCK(screen)) {
+			SDL_UnlockSurface(screen);
 	}
 }
 
@@ -571,7 +594,7 @@ void SdlSoftwareRenderer::updateTitleBar() {
 	if (titlebar_icon) SDL_SetWindowIcon(window, titlebar_icon);
 }
 
-void SdlSoftwareRenderer::listModes(std::vector<SubArea> &modes) {
+void SdlSoftwareRenderer::listModes(std::vector<Rect> &modes) {
 #if SDL_VERSION_ATLEAST(2,0,0)
 	int mode_count = SDL_GetNumDisplayModes(0);
 
@@ -581,7 +604,7 @@ void SdlSoftwareRenderer::listModes(std::vector<SubArea> &modes) {
 
 		if (display_mode.w == 0 || display_mode.h == 0) continue;
 
-		SubArea mode_rect;
+		Rect mode_rect;
 		mode_rect.w = display_mode.w;
 		mode_rect.h = display_mode.h;
 		modes.push_back(mode_rect);
@@ -615,7 +638,7 @@ void SdlSoftwareRenderer::listModes(std::vector<SubArea> &modes) {
 	}
 
 	for (unsigned i=0; detect_modes[i]; ++i) {
-		modes.push_back(SubArea(*detect_modes[i]));
+		modes.push_back(Rect(*detect_modes[i]));
 		if (detect_modes[i]->w < MIN_VIEW_W || detect_modes[i]->h < MIN_VIEW_H) {
 			// make sure the resolution fits in the constraints of MIN_VIEW_W and MIN_VIEW_H
 			modes.pop_back();

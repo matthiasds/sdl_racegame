@@ -10,7 +10,7 @@
 
 
 Car::Car()
-	: speed(0) {
+	r
 	pos=FPoint(Point(10,10));
 
 	prio=2;

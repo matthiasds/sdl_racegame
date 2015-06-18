@@ -121,10 +121,10 @@ Image* SdlHardwareImage::resize(int width, int height) {
 	if (!scaled) return NULL;
 
 	scaled->surface = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, width, height);
-
 	if (scaled->surface != NULL) {
 		// copy the source texture to the new texture, stretching it in the process
 		SDL_SetRenderTarget(renderer, scaled->surface);
+		SDL_SetTextureBlendMode(scaled->surface, SDL_BLENDMODE_BLEND);
 		SDL_RenderCopyEx(renderer, surface, NULL, NULL, 0, NULL, SDL_FLIP_NONE);
 		SDL_SetRenderTarget(renderer, NULL);
 
@@ -137,6 +137,102 @@ Image* SdlHardwareImage::resize(int width, int height) {
 	}
 
 	return NULL;
+}
+
+bool SdlHardwareImage::getAlphaXY(int x, int y)
+{
+	if (!surface) return 0;
+	SDL_SetTextureBlendMode(surface, SDL_BLENDMODE_BLEND);
+	/* get the format of the texture */
+	Uint32 u_format;
+	int width = 1;
+	int height= 1;
+	int textureAccessType;
+	SDL_QueryTexture(surface, &u_format, &textureAccessType, NULL, NULL);
+
+	/*get the pixelformat and corresponding BytesPerPixel representing each pixel of the texture */
+	SDL_PixelFormat* format = SDL_AllocFormat(u_format);
+	int bytesPerPixel = format->BytesPerPixel;
+	int pitch = width * bytesPerPixel;
+
+	/*get the pixels */
+	int pixel;
+	void *pixels = &pixel;
+
+	/* only read 1 pixel */
+	SDL_Rect targetpixels;
+	targetpixels.x = x;
+	targetpixels.y = y;
+	targetpixels.w = width;
+	targetpixels.h = height;
+
+	const std::size_t pixelSize = pitch*height;
+	if (textureAccessType == SDL_TEXTUREACCESS_TARGET) {
+		//pixels = new int; //malloc(pixelSize);//operator new(pixelSize);
+		SDL_SetRenderTarget(renderer, surface);
+		if( SDL_RenderReadPixels(renderer, &targetpixels, 0, pixels, pitch) != 0 )
+		{
+			std::cerr << "Unable to read pixels from texture! " << SDL_GetError() << std::endl;
+			return false;
+		}
+	}
+	else if (textureAccessType == SDL_TEXTUREACCESS_STREAMING) {
+		/* lock the complete texture (NULL), we get back a void pointer (implementation depending on the pixelformat) to the locked pixels and the pitch=length of one row pixels) */
+		if( SDL_LockTexture(surface, &targetpixels, &pixels, &pitch) != 0 )
+		{
+			std::cerr << "Unable to lock texture! " << SDL_GetError() << std::endl;
+			return false;
+		}
+	}
+	else {
+		std::cerr << "The texture has an unsuuported TEXTUREACCES type! " << std::endl;
+		return 0;
+	}
+
+
+
+	/*convert pixels from void to 32 bit */
+	Uint32 *upixels = (Uint32*) pixels;
+
+
+
+	/*Get the requested pixel */
+
+	/* Uint8* requestedPixel = (Uint8*) upixels + y * (pitch) + x * bytesPerPixel; //for multiple pixels*/
+	 Uint8* requestedPixel = (Uint8*) upixels;
+
+	/*get the color of the pixel*/
+	Uint32 pixelColor;
+
+	switch(bytesPerPixel)
+	{
+		case(1):
+			pixelColor = *requestedPixel;
+			break;
+		case(2):
+			pixelColor = *(Uint16*)requestedPixel;
+			break;
+		case(3):
+			if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+				pixelColor = requestedPixel[0] << 16 | requestedPixel[1] << 8 | requestedPixel[2];
+			else
+				pixelColor = requestedPixel[0] | requestedPixel[1] << 8 | requestedPixel[2] << 16;
+			break;
+		case(4):
+			pixelColor = *(Uint32*)requestedPixel;
+			break;
+	}
+
+	Uint8 red, green, blue, alpha;
+	SDL_GetRGBA(pixelColor, format, &red, &green, &blue, &alpha);
+
+	SDL_UnlockTexture(surface);
+
+//	if (textureAccessType == SDL_TEXTUREACCESS_TARGET) {
+//		delete pixels);
+//	}
+
+	return alpha>200;
 }
 
 SdlHardwareRenderer::SdlHardwareRenderer()
@@ -179,13 +275,19 @@ int SdlHardwareRenderer::createContext(int width, int height) {
 								window_w, window_h,
 								flags);
 
-	if (HWSURFACE) flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_TARGETTEXTURE;
+	flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
 	if (screen != NULL) renderer = SDL_CreateRenderer(screen, -1, flags);
 
 	if (renderer && FULLSCREEN && (window_w != width || window_h != height)) {
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 		SDL_RenderSetLogicalSize(renderer, width, height);
+	}
+
+	 //Initialize SDL_ttf
+	if( TTF_Init() == -1 )
+	{
+		std::cerr << "SDL_ttf could not initialize! SDL_ttf Error: "<< TTF_GetError() << std::endl;
 	}
 
 	if (screen != NULL && renderer != NULL) {
@@ -200,50 +302,60 @@ int SdlHardwareRenderer::createContext(int width, int height) {
 	}
 }
 
-SubArea SdlHardwareRenderer::getContextSize() {
-	SubArea size;
+Rect SdlHardwareRenderer::getContextSize() {
+	Rect size;
 	size.x = size.y = 0;
 	SDL_GetWindowSize(screen, &size.w, &size.h);
 
 	return size;
 }
 
-int SdlHardwareRenderer::render(Renderable& r, SubArea dest) {
-    SDL_Rect src = r.getSrc();
+int SdlHardwareRenderer::render(Image *image, Rect src, Rect dest) {
+    SDL_Rect _src = src;
     SDL_Rect _dest = dest;
-	return SDL_RenderCopy(renderer, static_cast<SdlHardwareImage *>(r.getImage())->surface, &src, &_dest);
+	return SDL_RenderCopy(renderer, static_cast<SdlHardwareImage *>(image)->surface, &_src, &_dest);
 }
 
-int SdlHardwareRenderer::render(Sprite *r) {
-	if (r == NULL) {
+int SdlHardwareRenderer::render(Sprite *sprite) {
+	if (sprite == NULL) {
 		return -1;
 	}
-	if ( !localToGlobal(r) ) {
-		return -1;
+	int returnVal;
+	for (int offsetIndex = 0;  offsetIndex < (int) sprite->getOffset().size(); offsetIndex++) {
+		returnVal = !renderAreaConversion(sprite, offsetIndex );
+		if ( returnVal == 0) { //rendering of sprite at offset inside area
+			// negative x and y clip causes weird stretching
+			// adjust for that here
+			if (destClip.x < 0) {
+				destClip.w -= abs(destClip.x);
+				m_dest.x += abs(destClip.x);
+				destClip.x = 0;
+			}
+			if (destClip.y < 0) {
+				destClip.h -= abs(destClip.y);
+				m_dest.y += abs(destClip.y);
+				destClip.y = 0;
+			}
+
+			m_dest.w = destClip.w;
+			m_dest.h = destClip.h;
+
+			SDL_Rect src = srcClip;
+			SDL_Rect dest = m_dest;
+			returnVal =  SDL_RenderCopy(renderer, static_cast<SdlHardwareImage *>(sprite->getGraphics())->surface, &src, &dest);
+			if (returnVal != 0) {
+				std::cerr << "Unable to render texture! " << SDL_GetError() << std::endl;
+			}
+		}
+
 	}
 
-	// negative x and y clip causes weird stretching
-	// adjust for that here
-	if (m_clip.x < 0) {
-		m_clip.w -= abs(m_clip.x);
-		m_dest.x += abs(m_clip.x);
-		m_clip.x = 0;
-	}
-	if (m_clip.y < 0) {
-		m_clip.h -= abs(m_clip.y);
-		m_dest.y += abs(m_clip.y);
-		m_clip.y = 0;
-	}
-
-	m_dest.w = m_clip.w;
-	m_dest.h = m_clip.h;
-
-    SDL_Rect src = m_clip;
-    SDL_Rect dest = m_dest;
-	return SDL_RenderCopy(renderer, static_cast<SdlHardwareImage *>(r->getGraphics())->surface, &src, &dest);
+	return returnVal;
 }
 
-int SdlHardwareRenderer::renderToImage(Image* src_image, SubArea& src, Image* dest_image, SubArea& dest, bool dest_is_transparent) {
+
+
+int SdlHardwareRenderer::renderToImage(Image* src_image, Rect& src, Image* dest_image, Rect& dest, bool dest_is_transparent) {
 	if (!src_image || !dest_image)
 		return -1;
 
@@ -270,7 +382,7 @@ int SdlHardwareRenderer::renderText(
 	TTF_Font *ttf_font,
 	const std::string& text,
 	Color color,
-	SubArea& dest
+	Rect& dest
 ) {
 	int ret = 0;
 	SDL_Texture *surface = NULL;
@@ -325,53 +437,29 @@ Image * SdlHardwareRenderer::renderTextToImage(TTF_Font* ttf_font, const std::st
 	return NULL;
 }
 
-void SdlHardwareRenderer::drawPixel(
-	int x,
-	int y,
-	Uint32 color
-) {
-	Uint32 u_format = SDL_GetWindowPixelFormat(screen);
-	SDL_PixelFormat* format = SDL_AllocFormat(u_format);
-
-	if (!format) return;
-
-	SDL_Color rgba;
-	SDL_GetRGBA(color, format, &rgba.r, &rgba.g, &rgba.b, &rgba.a);
-	SDL_FreeFormat(format);
-
-	SDL_SetRenderDrawColor(renderer, rgba.r, rgba.g, rgba.b, rgba.a);
+void SdlHardwareRenderer::drawPixel(int x, int y, Color color) {
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderDrawPoint(renderer, x, y);
 }
 
-void SdlHardwareRenderer::drawLine(
-	int x0,
-	int y0,
-	int x1,
-	int y1,
-	Uint32 color
-) {
-	Uint32 u_format = SDL_GetWindowPixelFormat(screen);
-	SDL_PixelFormat* format = SDL_AllocFormat(u_format);
-
-	if (!format) return;
-
-	SDL_Color rgba;
-	SDL_GetRGBA(color, format, &rgba.r, &rgba.g, &rgba.b, &rgba.a);
-	SDL_FreeFormat(format);
-
-	SDL_SetRenderDrawColor(renderer, rgba.r, rgba.g, rgba.b, rgba.a);
+void SdlHardwareRenderer::drawLine(int x0, int y0, int x1, int y1, Color color) {
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderDrawLine(renderer, x0, y0, x1, y1);
 }
 
-void SdlHardwareRenderer::drawRectangle(
-	const Point& p0,
-	const Point& p1,
-	Uint32 color
-) {
+void SdlHardwareRenderer::drawRectangle(const Point& p0, const Point& p1, Color color) {
 	drawLine(p0.x, p0.y, p1.x, p0.y, color);
 	drawLine(p1.x, p0.y, p1.x, p1.y, color);
 	drawLine(p0.x, p0.y, p0.x, p1.y, color);
 	drawLine(p0.x, p1.y, p1.x, p1.y, color);
+}
+
+void SdlHardwareRenderer::drawFilledRectangle(const Point& p0, const Point& p1,Color color) {
+	SDL_Rect fillRect = { p0.x, p0.y, p1.x - p0.x, p1.y - p0.y };
+
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderFillRect( renderer, &fillRect );
+
 }
 
 void SdlHardwareRenderer::blankScreen() {
@@ -468,8 +556,7 @@ void SdlHardwareRenderer::updateTitleBar() {
 	titlebar_icon = NULL;
 
 	if (!screen) return;
-	/*replacement of 	title = strdup("Game Window") due to c++11 not allowing it */
-	std::string title_s = "Game Window";
+	std::string title_s = "MDS Racer";
 	title = new char [title_s.size()+1];
 	std::copy(title_s.begin(), title_s.end(), title);
 	title[title_s.size()] = '\0';
@@ -481,7 +568,7 @@ void SdlHardwareRenderer::updateTitleBar() {
 	if (titlebar_icon) SDL_SetWindowIcon(screen, titlebar_icon);
 }
 
-void SdlHardwareRenderer::listModes(std::vector<SubArea> &modes) {
+void SdlHardwareRenderer::listModes(std::vector<Rect> &modes) {
 	int mode_count = SDL_GetNumDisplayModes(0);
 
 	for (int i=0; i<mode_count; i++) {
@@ -490,7 +577,7 @@ void SdlHardwareRenderer::listModes(std::vector<SubArea> &modes) {
 
 		if (display_mode.w == 0 || display_mode.h == 0) continue;
 
-		SubArea mode_rect;
+		Rect mode_rect;
 		mode_rect.w = display_mode.w;
 		mode_rect.h = display_mode.h;
 		modes.push_back(mode_rect);
@@ -548,5 +635,7 @@ void SdlHardwareRenderer::freeImage(Image *image) {
 		SDL_DestroyTexture(static_cast<SdlHardwareImage *>(image)->surface);
 	}
 }
+
+
 
 

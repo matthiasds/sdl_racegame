@@ -13,8 +13,10 @@
 
 class EntityFactory {
 public:
-	virtual Car* createCar(Renderer* renderer) = 0;
-	virtual Road* createRoad(Renderer* renderer) = 0;
+	virtual Entity* createPlayerCar(Game* game, Renderer* renderer) = 0;
+	virtual Entity* createEnemyCar(Game* game, Renderer* renderer) = 0;
+	virtual Entity* createRoad(Game* game, Renderer* renderer) = 0;
+	virtual Entity* createRoadBorder(Game* game, Renderer* renderer) = 0;
 	virtual ~EntityFactory() {};
 };
 

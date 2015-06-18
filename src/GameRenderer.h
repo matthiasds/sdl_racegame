@@ -23,7 +23,7 @@ public:
 
 	int load(std::string filename);
 	void logic();
-	void render(std::vector<Renderable*> &renderables);
+	//void render(std::vector<Renderable*> &renderables);
 	// some events can trigger powers
 	void activatePower(int power_index, unsigned statblock_index, FPoint &target);
 

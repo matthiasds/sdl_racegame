@@ -12,8 +12,9 @@
  * Image
  */
 Image::Image(Renderer *_device)
-	: device(_device), destinationScaleFactor(1)
-	, ref_counter(1) {
+	: ref_counter(1),
+	  device(_device)
+	  {
 }
 
 Image::~Image() {
@@ -43,18 +44,15 @@ int Image::getHeight() const {
 	return 0;
 }
 
-Sprite *Image::createSprite(bool clipToSize) {
+
+Sprite *Image::createSprite(bool clipToSize, Rect renderArea) {
 	Sprite *sprite;
-	sprite = new Sprite(this);
+	sprite = new Sprite(this, renderArea);
 	if (clipToSize)
 		sprite->setClip(0, 0, this->getWidth(), this->getHeight());
 	return sprite;
 }
 
-float Image::getDestinationScaleFactor() const {
-	return destinationScaleFactor;
-}
-
-void Image::setDestinationScaleFactor(float destinationScaleFactor) {
-	this->destinationScaleFactor = destinationScaleFactor;
+Renderer* Image::getRenderer() const {
+	return device;
 }

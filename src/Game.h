@@ -21,24 +21,73 @@
 #include "Renderer.h"
 #include "EntityFactory.h"
 #include "GameRenderer.h"
+#include "TypeInfoComparator.h"
+#include "SystemManager.h"
+#include "BitSize.h"
 
 
-class Road;
+
+
+class System;
+class Entity;
 
 
 class Game {
-private:
-	Road *road; //temp
-Renderer *renderDevice;
-GameRenderer * gameRenderer;
-EntityFactory * factory;
-std::vector<Renderable*> renderList;  //list of imlemented class renderable +- composite design pattern
-std::vector<Entity*> entityList;
+
 public:
-	Game(std::string &render_device_name);
+	Game(std::string &render_device_name, int screenWidth, int screenHeight);
 	Renderer* getRenderer() const;
+	Entity* createEntity();
+
 	void start();
 	virtual ~Game();
+	const float getDelta() const;
+
+	std::map<int, std::vector<IComponent*> *>& getComponentsByType();
+	void printComponentsByType();
+	void updateEntity(Entity& entity);
+	void printEntityInfo(Entity *entity);
+	void printEntityInfo();
+	void refreshSystemComponentLinks(Entity *entity);
+	void refreshSystemComponentLinks();
+	const Rect& getScreen() const;
+
+private:
+
+	Renderer *renderDevice;
+	EntityFactory * factory;
+	SystemManager * systemManager;
+
+
+	std::vector<Entity *> activeEntityList;
+	std::vector<Entity *> removedAndAvailableEntityList;
+	std::map<int, std::vector<IComponent*>*> componentsByType;
+
+
+	std::vector<Entity*> entitiesToUpdate;
+	uint32_t nextAvailableId;
+	uint32_t count;
+	long uniqueEntityId;
+	long totalCreated;
+	long totalRemoved;
+	const float delta = 0.1;
+	Entity * playerCar;
+	Entity * backgrounds;
+	System * enemyCarControlSystem;
+	System * sdlInputSystem;
+	System * playerSpeedSystem;
+	System * sdlInfoRenderSystem;
+	System * movementSystem;
+	System * renderSystem;
+	System * backgroundRenderSystem;
+	System * roadLaneSystem;
+	System * carLaneMovingSystem;
+	System * playerCarLaneMovingSystem;
+	System * collisionSystem;
+	System * sdlMovingEntityDebugSystem;
+	System * damageSystem;
+
+	Rect screen;
 };
 
 

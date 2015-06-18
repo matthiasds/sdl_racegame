@@ -31,11 +31,12 @@ public:
 	int getWidth() const;
 	int getHeight() const;
 
-	void fillWithColor(Uint32 color);
-	void drawPixel(int x, int y, Uint32 color);
-	Uint32 MapRGB(Uint8 r, Uint8 g, Uint8 b);
-	Uint32 MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-	Image* resize(int width, int height);
+	void fillWithColor(Uint32 color) override;
+	void drawPixel(int x, int y, Uint32 color) override;
+	Uint32 MapRGB(Uint8 r, Uint8 g, Uint8 b) override;
+	Uint32 MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) override;
+	Image* resize(int width, int height) override;
+	bool getAlphaXY(int x, int y) override;
 
 	SDL_Renderer *renderer;
 	SDL_Texture *surface;
@@ -47,16 +48,17 @@ public:
 
 	SdlHardwareRenderer();
 	int createContext(int width, int height);
-	SubArea getContextSize();
+	Rect getContextSize();
 
-	virtual int render(Renderable& r, SubArea dest);
+	virtual int render(Image *image, Rect src, Rect dest);
 	virtual int render(Sprite* r);
-	virtual int renderToImage(Image* src_image, SubArea& src, Image* dest_image, SubArea& dest, bool dest_is_transparent = false);
+	virtual int renderToImage(Image* src_image, Rect& src, Image* dest_image, Rect& dest, bool dest_is_transparent = false);
 
-	int renderText(TTF_Font *ttf_font, const std::string& text, Color color, SubArea& dest);
-	Image *renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended = true);
-	void drawPixel(int x, int y, Uint32 color);
-	void drawRectangle(const Point& p0, const Point& p1, Uint32 color);
+	int renderText(TTF_Font *ttf_font, const std::string& text, Color color, Rect& dest) override;
+	Image *renderTextToImage(TTF_Font* ttf_font, const std::string& text, Color color, bool blended = true) override;
+	void drawPixel(int x, int y, Color color) override;
+	void drawRectangle(const Point& p0, const Point& p1, Color color) override;
+	void drawFilledRectangle(const Point& p0, const Point& p1, Color color) override;
 	void blankScreen();
 	void commitFrame();
 	void destroyContext();
@@ -65,14 +67,15 @@ public:
 	Image *createImage(int width, int height);
 	void setGamma(float g);
 	void updateTitleBar();
-	void listModes(std::vector<SubArea> &modes);
+	void listModes(std::vector<Rect> &modes);
 	void freeImage(Image *image);
+	void drawLine(int x0, int y0, int x1, int y1, Color color) override;
 
 	Image* loadImage(std::string filename,
 					 std::string errormessage = "Couldn't load image",
 					 bool IfNotFoundExit = false);
 private:
-	void drawLine(int x0, int y0, int x1, int y1, Uint32 color);
+
 
 	SDL_Window *screen;
 	SDL_Renderer *renderer;
