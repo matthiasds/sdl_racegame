@@ -8,7 +8,10 @@
 #include "MovementSystem.h"
 
 
-
+/**
+ * Constructor: The Components below are the components to which this system is subscribed.
+ * This System is applied to ALL entities having (minimum) ALL of the Components below.
+ */
 
 MovementSystem::MovementSystem() {
 	addComponentType<VelocityComponent>();
@@ -16,6 +19,14 @@ MovementSystem::MovementSystem() {
 	addComponentType<CollisionComponent>();
 }
 
+
+/**
+ * processEntity: This function is executed for all entities (individual = one by one) that contain the Components
+ * the System is subscribed to in the constructor (above).
+ * If you want to make use of this System on a certain entity. The components described in the constructor should be added
+ * to the Entity in the (Sdl)EntityFactory.
+ * @param entity: the pointer to the current entity (an entity is used as container of all components and has a unique id)
+ */
 void MovementSystem::processEntity(Entity* entity) {
 	float gameDelta = game->getDelta();
 	FPoint myPosition = positionMapper.get(entity)->getPosition();
@@ -100,13 +111,16 @@ void MovementSystem::processEntity(Entity* entity) {
 	positionMapper.get(entity)->setPosition(myPosition);
 }
 
+/**
+ * Destructor: As Systems generally do not contain data (only Components do) the Systems destructor doesn't have a function
+ */
 MovementSystem::~MovementSystem() {
-	// TODO Auto-generated destructor stub
 }
 
 
-
-
+/**
+* init: not used in this System
+*/
 void MovementSystem::init() {
 
 }

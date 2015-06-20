@@ -9,13 +9,36 @@
 #include "Game.h"
 #include "Sprite.h"
 
+
+/**
+ *  BackgroundRenderSystem:
+ *  Takes care of background rendering by using tiles. this makes it possible to make use of multiple tiles for road or
+ *  border next to road. A reference is set to be followed (Camera) Usually this should be the player car.
+ *  The same textures are used and generated a few tiles before the reference (player Car) and remembered for a certain
+ *  history. This history makes it possible to drive in reverse, but because it has a limitted history length. On a certain
+ *  point going further in reverse should be blocked or you drive into a black hole.
+ */
+
+
+
+/**
+ * Constructor: The Components below are the components to which this system is subscribed.
+ * This System is applied to ALL entities having (minimum) ALL of the Components below.
+ */
 BackgroundRenderSystem::BackgroundRenderSystem() {
 	addComponentType<BackgroundRenderComponent>();
 	addComponentType<RenderReferenceComponent>();
 	addComponentType<PositionComponent>();
-	addComponentType<RenderComponent>();
+	addComponentType<SdlRenderComponent>();
 }
 
+/**
+ * processEntity: This function is executed for all entities (individual = one by one) that contain the Components
+ * the System is subscribed to in the constructor (above).
+ * If you want to make use of this System on a certain entity. The components described in the constructor should be added
+ * to the Entity in the (Sdl)EntityFactory.
+ * @param entity: the pointer to the current entity (an entity is used as container of all components and has a unique id)
+ */
 void BackgroundRenderSystem::processEntity(Entity* entity) {
 	std::vector<BackgroundTile*> backgroundTiles = backgroundRenderMapper.get(entity)->getBackgroundTiles();
 	Entity* reference = renderReferenceMapper.get(entity)->getReference();
@@ -31,7 +54,7 @@ void BackgroundRenderSystem::processEntity(Entity* entity) {
 
 
 
-	/*orientation in this phase is higher Y value is the background to come when moving forward */
+	/* orientation in this phase is higher Y value is the background to come when moving forward */
 	/* later on at rendering the lowest border of the screen is the highest Y value */
 
 	BackgroundTile* highestYTile = *(backgroundTiles.begin());
@@ -73,26 +96,12 @@ void BackgroundRenderSystem::processEntity(Entity* entity) {
 
 			if (currentTileSprite != NULL ) //sprite exist in renderComponent with this textureId?
 			{
-				//float renderPositionY = tilePosition.y;
-				//if (renderPositionY >= -windowsizeH && renderPositionY <= windowsizeH) {  //position to render is in the screen area?
-					//render current sprite with updated position;
-					//backgroundPosition.y = renderPositionY;
 					std::vector<Point>& spriteOffsetVector = currentTileSprite->getOffset();
 					Point offset = spriteOffsetVector.at(0); //load inital offset
 					offset.y += tilePosition.y - backgroundPosition.y;
 					if (offset.y != 0) { //if it is another tile then the first tile
 						spriteOffsetVector.push_back(offset);
 					}
-
-
-
-
-
-					//currentTileSprite->setDestY(renderPositionY);
-					//currentTileSprite->setDestX(backgroundPosition.x);
-					//std::cout << "render road tile " << currentTile -backgroundTiles.begin() <<" at game coordinate " << tilePosition.y << " to render coordinate (window) at " << offset.y << std::endl;
-					//game->getRenderer()->render(currentTileSprite);
-				//}
 			}
 			else {
 				std::cerr << "Sprite with spriteId  " << (*currentTile)->getTextureId() << " not available in rendercomponent " << std::endl;
@@ -102,11 +111,9 @@ void BackgroundRenderSystem::processEntity(Entity* entity) {
 		}
 	}
 
-
 	//check if new tile loading is necessary
 	if ((highestYTile->getPosition().y - referenceEntityPosition.y) <= windowsizeH) //new tile is less then 1 window size ahead
 	{
-		//std::cout << "load new tile " << std::endl;
 		//make lowest tile highest tile
 		Sprite * lowestYTileSprite = backgroundSprites.at(lowestYTile->getTextureId());
 		int lowestYTileHeight = lowestYTileSprite->getTextureRenderBox().h;//lowestYTileSprite->getGraphicsHeight()*lowestYTileSprite->getScale();
@@ -121,33 +128,15 @@ void BackgroundRenderSystem::processEntity(Entity* entity) {
 
 
 
-
-//	for(std::size_t i = 0; i < sprites.size(); i++) {
-//		std::vector<Sprite*> sprites = renderMapper.get(entity)->getSprites();
-//		Point Offset = sprites[i]->getOffset();
-//		int imageH = sprites[i]->getGraphicsHeight();
-//		SubArea screenSize=game->getRenderer()->getContextSize();
-//		int windowsizeH = screenSize.h;
-//		Offset.y= + imageH - (((entity->getPos().y) - (i * imageH)) % (windowsizeH + imageH) );
-//		sprites[i]->setOffset(Offset);
-//		game->getRenderer()->render(sprites[i]);
-//	}
-
-
-//template<typename component_type>
-//void BackgroundRenderSystem::addComponentType() {
-//      //Add Bits to typeflags
-//      typeFlags |= ComponentTypeManager::getBit<component_type>();
-//}
-
-
-
+/**
+ * Destructor: As Systems generally do not contain data (only Components do) the Systems destructor doesn't have a function
+ */
 BackgroundRenderSystem::~BackgroundRenderSystem() {
-	// TODO Auto-generated destructor stub
 }
 
+/**
+ * init: not used in this System
+ */
 void BackgroundRenderSystem::init() {
-	//count the number of textures currently in the rendercomponent and add enough so the whole renderArea can be filled with it.
-
 
 }

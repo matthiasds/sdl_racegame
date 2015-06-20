@@ -13,7 +13,7 @@
 #include "System.h"
 #include "Entity.h"
 #include "ComponentMapper.h"
-#include "../components/RenderComponent.h"
+#include "../components/SdlRenderComponent.h"
 #include "../components/PositionComponent.h"
 #include "../components/RenderReferenceComponent.h"
 
@@ -24,7 +24,7 @@ public:
 	void processEntity(Entity* entity) override;
 	virtual ~SdlRenderSystem();
 private:
-	ComponentMapper<RenderComponent> renderMapper;
+	ComponentMapper<SdlRenderComponent> renderMapper;
 	ComponentMapper<PositionComponent> positionMapper;
 	ComponentMapper<RenderReferenceComponent> renderReferenceMapper;
 };

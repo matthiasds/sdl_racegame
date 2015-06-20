@@ -8,7 +8,7 @@
 #include "SdlEntityFactory.h"
 #include "../components/PositionComponent.h"
 #include "../components/VelocityComponent.h"
-#include "../components/RenderComponent.h"
+#include "../components/SdlRenderComponent.h"
 #include "../components/BackgroundRenderComponent.h"
 #include "../components/InputComponent.h"
 #include "../components/AIComponent.h"
@@ -18,7 +18,11 @@
 #include "../components/SdlDebugComponent.h"
 #include "../components/DamageComponent.h"
 #include "../components/SdlInfoRenderComponent.h"
+#include "../components/EnemyCarComponent.h"
 #include "game.h"
+#include <random>
+#include "Textures.h"
+#include "GameOptions.h"
 
 
 SdlEntityFactory::SdlEntityFactory() {
@@ -34,14 +38,14 @@ Entity* SdlEntityFactory::createPlayerCar(Game* game, Renderer* renderer) {
 	playerCar = game->createEntity();
 	playerCar->addComponent(new PositionComponent(Point(game->getScreen().w/2,0)));
 	playerCar->addComponent(new VelocityComponent(0,0));
-	RenderComponent * renderComponent = new RenderComponent(renderer);
+	SdlRenderComponent * renderComponent = new SdlRenderComponent(renderer);
 	Rect carTextureBox;
 
-	carTextureBox.w = game->getScreen().w/7;
+	carTextureBox.w = game->getScreen().w/8;
 	carTextureBox.h = carTextureBox.w * 2;
 	carTextureBox.x = carTextureBox.w / 2;
 	carTextureBox.y = carTextureBox.h/2;//- game->getScreen().h + carTextureBox.h *1.1 ;
-	renderComponent->addStaticSpritefromTexture(PATH_CAR1,0, carTextureBox, game->getScreen());
+	renderComponent->addStaticSpritefromTexture(PATH_PLAYER_CAR,0, carTextureBox, game->getScreen());
 
 	playerCar->addComponent(renderComponent);
 	playerCar->addComponent(new InputComponent());
@@ -68,17 +72,19 @@ Entity* SdlEntityFactory::createPlayerCar(Game* game, Renderer* renderer) {
 	return playerCar;
 }
 
-Entity* SdlEntityFactory::createEnemyCar(Game* game, Renderer* renderer) {
+Entity* SdlEntityFactory::createEnemyCar(Game* game, Renderer* renderer, int position) {
+	static std::default_random_engine generator;
+	std::uniform_int_distribution<> random_speed(MIN_ENEMY_CAR_SPEED,MAX_ENEMY_CAR_SPEED);
 	Entity * enemyCar = game->createEntity();
-	enemyCar->addComponent(new PositionComponent(FPoint(game->getScreen().w/2 + game->getScreen().w/4.5,0)));  //set one lane further
-	enemyCar->addComponent(new VelocityComponent(0,0));
-	RenderComponent * renderComponent = new RenderComponent(renderer);
+	enemyCar->addComponent(new PositionComponent(FPoint(game->getScreen().w/2 + game->getScreen().w/4.5,position)));  //set one lane further
+	enemyCar->addComponent(new VelocityComponent(0,random_speed(generator)));
+	SdlRenderComponent * renderComponent = new SdlRenderComponent(renderer);
 	Rect carTextureBox;
 	carTextureBox.w = game->getScreen().w/7;
-		carTextureBox.h = carTextureBox.w * 2;
-		carTextureBox.x = carTextureBox.w / 2;
-		carTextureBox.y =  carTextureBox.h/2;
-	renderComponent->addStaticSpritefromTexture(PATH_CAR3, 0,  carTextureBox, game->getScreen());
+	carTextureBox.h = carTextureBox.w * 2;
+	carTextureBox.x = carTextureBox.w / 2;
+	carTextureBox.y =  carTextureBox.h/2;
+	renderComponent->addStaticSpritefromTexture(getRandomCarTexture(), 0,  carTextureBox, game->getScreen());
 	enemyCar->addComponent(renderComponent);
 	enemyCar->addComponent(new AIComponent());
 	enemyCar->addComponent(renderReferenceComponent);
@@ -95,6 +101,7 @@ Entity* SdlEntityFactory::createEnemyCar(Game* game, Renderer* renderer) {
 	collisionBox.x = collisionBox.w/2; //is used as offset
 	collisionBox.y = collisionBox.h/2;
 	enemyCar->addComponent(new CollisionComponent(enemyCar, collisionBox));
+	enemyCar->addComponent(new EnemyCarComponent(enemyCar));
 	enemyCar->addComponent(new SdlDebugComponent(renderer,PATH_STANDARDFONT, carTextureBox.h * 0.05));
 	enemyCar->addComponent(new DamageComponent());
 	enemyCar->update();
@@ -112,7 +119,7 @@ Entity* SdlEntityFactory::createRoad(Game* game, Renderer* renderer) {
 		road3laneTextureBox.h = road3laneTextureBox.w /2;
 		road3laneTextureBox.x = road3laneTextureBox.w /2;
 		road3laneTextureBox.y =  0;
-		RenderComponent * renderComponent = new RenderComponent(renderer);
+		SdlRenderComponent * renderComponent = new SdlRenderComponent(renderer);
 		renderComponent->addStaticSpritefromTexture(PATH_ROAD_STRAIGHT_3_LANES, 0,  road3laneTextureBox, game->getScreen());
 		road->addComponent(renderComponent);
 		road->addComponent(renderReferenceComponent);
@@ -135,7 +142,7 @@ Entity* SdlEntityFactory::createRoadBorder(Game* game, Renderer* renderer) {
 	if (checkrenderReferenceComponent()) {
 		roadBorderLeft = game->createEntity();
 		roadBorderLeft->addComponent(new PositionComponent(Point(game->getScreen().w *0.9, 0)));
-		RenderComponent * renderComponentL = new RenderComponent(renderer);
+		SdlRenderComponent * renderComponentL = new SdlRenderComponent(renderer);
 		roadBorderLeft->addComponent(new BackgroundRenderComponent(0, 20, game->getScreen()));
 		renderComponentL->addStaticSpritefromTexture(PATH_GRASS_FULL, 0, roadBorderTextureBox, game->getScreen());
 		roadBorderLeft->addComponent(renderComponentL);
@@ -146,7 +153,7 @@ Entity* SdlEntityFactory::createRoadBorder(Game* game, Renderer* renderer) {
 	if (checkrenderReferenceComponent()) {
 		roadBorderRight = game->createEntity();
 		roadBorderRight->addComponent(new PositionComponent(Point(game->getScreen().w*0.10, 0)));
-		RenderComponent * renderComponentR = new RenderComponent(renderer);
+		SdlRenderComponent * renderComponentR = new SdlRenderComponent(renderer);
 		roadBorderRight->addComponent(new BackgroundRenderComponent(0, 20, game->getScreen()));
 		renderComponentR->addStaticSpritefromTexture(PATH_GRASS_FULL, 0,  roadBorderTextureBox, game->getScreen());
 		roadBorderRight->addComponent(renderComponentR);
@@ -155,7 +162,6 @@ Entity* SdlEntityFactory::createRoadBorder(Game* game, Renderer* renderer) {
 	roadBorderRight->update();
 	return roadBorderRight;
 }
-
 
 
 bool SdlEntityFactory::checkrenderReferenceComponent() {
@@ -167,3 +173,12 @@ bool SdlEntityFactory::checkrenderReferenceComponent() {
 		return false;
 	}
 }
+
+std::string SdlEntityFactory::getRandomCarTexture() {
+	static std::default_random_engine generator;
+	std::uniform_int_distribution<> random_car(0,enemyCars.size()-1);
+	return enemyCars[random_car(generator)];
+}
+
+
+

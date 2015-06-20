@@ -8,9 +8,24 @@
 #include "PlayerCarLaneMovingSystem.h"
 
 
+/**
+ * PlayerCarLaneMovingSystem:
+ * This System is used for controlling the lane movement of the PlayerCar.
+ * It uses the left, right inputs created by the (Sdl)InputSystem and creates wantedLane numbers
+ * for the CarLaneMovingSystem. The playerCar can set the unique laneNumber -1 to indicate it is
+ * positioning between lanes and not following any lane.
+ *
+ * In fact the player car has not much interaction with the lanes when controlled to keyboard.
+ * This functions is implemented for later improvement for ex. for controlling by touch where it can
+ * automatically center and folow a lane near the position of touch.
+ * Other possible options would be like a temporary autopilot bonus...
+ */
 
 
-
+/**
+ * Constructor: The Components below are the components to which this system is subscribed.
+ * This System is applied to ALL entities having (minimum) ALL of the Components below.
+ */
 PlayerCarLaneMovingSystem::PlayerCarLaneMovingSystem() {
 	addComponentType<LaneComponent>();
 	addComponentType<PositionComponent>();
@@ -18,6 +33,14 @@ PlayerCarLaneMovingSystem::PlayerCarLaneMovingSystem() {
 	addComponentType<InputComponent>();
 }
 
+
+/**
+ * processEntity: This function is executed for all entities (individual = one by one) that contain the Components
+ * the System is subscribed to in the constructor (above).
+ * If you want to make use of this System on a certain entity. The components described in the constructor should be added
+ * to the Entity in the (Sdl)EntityFactory.
+ * @param entity: the pointer to the current entity (an entity is used as container of all components and has a unique id)
+ */
 void PlayerCarLaneMovingSystem::processEntity(Entity* entity) {
 	Inputs inputs = inputMapper.get(entity)->getInputs();
 
@@ -38,12 +61,16 @@ void PlayerCarLaneMovingSystem::processEntity(Entity* entity) {
 }
 
 
+/**
+ * Destructor: As Systems generally do not contain data (only Components do) the Systems destructor doesn't have a function
+ */
 PlayerCarLaneMovingSystem::~PlayerCarLaneMovingSystem() {
-	// TODO Auto-generated destructor stub
+
 }
 
-
-
+/**
+* init: not used in this System
+*/
 void PlayerCarLaneMovingSystem::init() {
 }
 

@@ -12,8 +12,9 @@ class LaneComponent : public IComponent {
 public:
 	LaneComponent(Entity * roadEntityReference) {
 		this->roadEntityReference = roadEntityReference;
-		currentLane=2;
-		wantedLane=2;
+		currentLane=3;
+		wantedLane=3;
+		commingNumberOfLanes=3;
 	}
 
 

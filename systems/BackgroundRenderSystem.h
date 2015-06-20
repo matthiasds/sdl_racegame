@@ -16,7 +16,7 @@
 #include "../components/BackgroundRenderComponent.h"
 #include "../components/PositionComponent.h"
 #include "../components/RenderReferenceComponent.h"
-#include "../components/RenderComponent.h"
+#include "../components/SdlRenderComponent.h"
 
 class Game;
 
@@ -32,7 +32,7 @@ private:
 	ComponentMapper<BackgroundRenderComponent> backgroundRenderMapper;
 	ComponentMapper<PositionComponent> positionMapper;
 	ComponentMapper<RenderReferenceComponent> renderReferenceMapper;
-	ComponentMapper<RenderComponent> renderMapper;
+	ComponentMapper<SdlRenderComponent> renderMapper;
 };
 
 #endif /* BACKGROUNDRENDERSYSTEM_H_ */

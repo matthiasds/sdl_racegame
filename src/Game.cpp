@@ -29,8 +29,10 @@
 #include "../systems/SdlMovingEntityDebugSystem.h"
 #include "../systems/SdlInfoRenderSystem.h"
 #include "../systems/DamageSystem.h"
+#include "../systems/EnemyCarPlacementSystem.h"
 #include <string>
 #include <typeinfo>
+#include "GameOptions.h"
 
 
 
@@ -77,6 +79,7 @@ Game::Game(std::string &render_device_name, int screenWidth, int screenHeight) {
 	collisionSystem = systemManager->setSystem(new CollisionSystem());
 	sdlMovingEntityDebugSystem = systemManager->setSystem(new SdlMovingEntityDebugSystem());
 	damageSystem = systemManager->setSystem(new DamageSystem());
+	enemyCarPlacementSystem = systemManager->setSystem(new EnemyCarPlacementSystem());
 
 
 
@@ -84,7 +87,10 @@ Game::Game(std::string &render_device_name, int screenWidth, int screenHeight) {
 	factory->createRoadBorder(this, renderDevice);
 	factory->createRoad(this, renderDevice);
 	factory->createPlayerCar(this, renderDevice);
-	factory->createEnemyCar(this, renderDevice);
+	for (int position = 0; position < screen.h*CAR_REPITITION; position +=screen.h) {
+		factory->createEnemyCar(this, renderDevice , position);
+	}
+
 	//Entity * enemyCar2 = factory->createEnemyCar(this, renderDevice);
 
 	systemManager->initAllSystems();
@@ -136,6 +142,7 @@ void Game::start() {
 
 		sdlMovingEntityDebugSystem->process();
 		damageSystem->process();
+		enemyCarPlacementSystem->process();
 
 		//gameRenderer->render(renderList);
 		//road->advance();

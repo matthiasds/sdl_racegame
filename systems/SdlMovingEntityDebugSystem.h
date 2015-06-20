@@ -21,6 +21,7 @@
 #include "../components/SdlDebugComponent.h"
 #include "../components/RenderReferenceComponent.h"
 #include "../components/DamageComponent.h"
+#include "../components/LaneComponent.h"
 #include "Game.h"
 
 
@@ -40,11 +41,13 @@ private:
 	ComponentMapper<RenderReferenceComponent> renderReferenceMapper;
 	ComponentMapper<SdlDebugComponent> debugMapper;
 	ComponentMapper<DamageComponent> damageMapper;
+	ComponentMapper<LaneComponent> laneMapper;
 
 	void drawCollisionDebugInfo(Entity* entity);
 	void drawDamageDebugInfo(Entity* entity);
 	void drawSpeedDebugInfo(Entity* entity);
 	void drawPositionDebugInfo(Entity* entity);
+	void drawLaneDebugInfo(Entity* entity);
 };
 
 #endif /* SDLMOVINGENTITYDEBUSYSTEM_H_ */

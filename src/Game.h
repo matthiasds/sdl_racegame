@@ -86,6 +86,7 @@ private:
 	System * collisionSystem;
 	System * sdlMovingEntityDebugSystem;
 	System * damageSystem;
+	System * enemyCarPlacementSystem;
 
 	Rect screen;
 };

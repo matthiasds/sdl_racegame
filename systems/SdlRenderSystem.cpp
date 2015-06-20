@@ -1,5 +1,5 @@
 /*
- * RenderSystem.cpp
+ * SdlRenderSystem.cpp
  *
  *  Created on: 7-apr.-2015
  *      Author: Matthias
@@ -8,14 +8,36 @@
 #include "SdlRenderSystem.h"
 #include "Game.h"
 
+/**
+ * SdlRenderSystem:
+ * This is the main renderer of all objects with textures that are not background and not text.
+ * This a specific SDL System. Separated from the other systems to be possibly replaced by an other renderer. This renderer is specifically
+ * tied to the SdlRendercomponent. If an other renderer would be wanted this should be done in the (Sdl or other) EntityFactory which adds
+ * components to the entities
+ *
+ * An entity in his SdlRenderComponent can contain one or multiple Sprites containing textures. All textures are rendered relative to the
+ * camera viewpoint of the ReferenceCompont. This view is usually cenetered on the PlayerCar (reference)
+ */
+
+
+/**
+ * Constructor: The Components below are the components to which this system is subscribed.
+ * This System is applied to ALL entities having (minimum) ALL of the Components below.
+ */
 SdlRenderSystem::SdlRenderSystem() {
-	addComponentType<RenderComponent>();
+	addComponentType<SdlRenderComponent>();
 	addComponentType<PositionComponent>();
 	addComponentType<RenderReferenceComponent>();
 }
 
-/* renders the entities  with a RenderComponent (containing 1 or multiple Sprites) and PositionComponent (Position) with a position relative to a ReferenceComponenet (Entity) */
 
+/**
+ * processEntity: This function is executed for all entities (individual = one by one) that contain the Components
+ * the System is subscribed to in the constructor (above).
+ * If you want to make use of this System on a certain entity. The components described in the constructor should be added
+ * to the Entity in the (Sdl)EntityFactory.
+ * @param entity: the pointer to the current entity (an entity is used as container of all components and has a unique id)
+ */
 void SdlRenderSystem::processEntity(Entity* entity) {
 
 	//std::sort(entitiesToUpdate.begin() , entitiesToUpdate.end(), priocompare);
@@ -49,11 +71,15 @@ void SdlRenderSystem::processEntity(Entity* entity) {
 
 }
 
+/**
+ * Destructor: As Systems generally do not contain data (only Components do) the Systems destructor doesn't have a function
+ */
 SdlRenderSystem::~SdlRenderSystem() {
-	// TODO Auto-generated destructor stub
 }
 
 
-
+/**
+* init: not used in this System
+*/
 void SdlRenderSystem::init() {
 }
