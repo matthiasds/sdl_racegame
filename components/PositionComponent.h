@@ -8,7 +8,6 @@
 #ifndef POSITIONCOMPONENT_H_
 #define POSITIONCOMPONENT_H_
 
-#include "Utils.h"
 
 class PositionComponent : public IComponent {
 public:

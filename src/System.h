@@ -11,7 +11,7 @@
 #include "BitSize.h"
 #include "ComponentTypeManager.h"
 #include <vector>
-#include "../components/BackgroundRenderComponent.h"
+#include "../components/BackgroundTilingComponent.h"
 #include "../components/VelocityComponent.h"
 #include "../components/PositionComponent.h"
 #include "ComponentMapper.h"

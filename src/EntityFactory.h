@@ -8,8 +8,7 @@
 #ifndef ENTITYFACTORY_H_
 #define ENTITYFACTORY_H_
 
-#include "Car.h"
-#include "Road.h"
+#include "Entity.h"
 
 class EntityFactory {
 public:

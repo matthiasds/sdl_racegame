@@ -22,7 +22,7 @@
  * This System is applied to ALL entities having (minimum) ALL of the Components below.
  */
 RoadLaneSystem::RoadLaneSystem() {
-	addComponentType<BackgroundRenderComponent>();
+	addComponentType<BackgroundTilingComponent>();
 	addComponentType<RoadComponent>();
 }
 
@@ -35,8 +35,8 @@ RoadLaneSystem::RoadLaneSystem() {
  * @param entity: the pointer to the current entity (an entity is used as container of all components and has a unique id)
  */
 void RoadLaneSystem::processEntity(Entity* entity) {
-	BackgroundTile* highestTile = backgroundRenderMapper.get(entity)->getHighestTile();
-	BackgroundTile* referenceTile = backgroundRenderMapper.get(entity)->getReferenceTile();
+	BackgroundTile* highestTile = backgroundTilingMapper.get(entity)->getHighestTile();
+	BackgroundTile* referenceTile = backgroundTilingMapper.get(entity)->getReferenceTile();
 
 
 	//comming road has 3 lanes?

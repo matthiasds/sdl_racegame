@@ -12,6 +12,7 @@
 #include "../components/PositionComponent.h"
 #include "Entity.h"
 #include "Game.h"
+#include <limits>
 
 /**
  * CarLaneMovingSystem:
@@ -98,31 +99,32 @@ void CarLaneMovingSystem::processEntity(Entity* entity) {
 			int velocityY = std::abs(thisVelocityComponent->getVelocityY());
 
 			int carWantedLanedifference = commingCenterLanePositions[carWantedLane-1] - entityPosition.x;
-			if (carWantedLanedifference > 0 && thisVelocityComponent->testSpeedLockAvailable(X_PLUS_LOCK, mySystemSpeedLock)) { //car needs to go right and is allowed
-				velocityX+=2; //increase right going speed
-				thisVelocityComponent->setSpeedLock(X_PLUS_LOCK,mySystemSpeedLock);
+			if (carWantedLanedifference > currentLaneWidth/32 && thisVelocityComponent->testVelocityLockAvailable(X_PLUS_LOCK, mySystemSpeedLock)) { //car needs to go right and is allowed
+				velocityX+=4; //increase right going speed
+				thisVelocityComponent->setVelocityLock(X_PLUS_LOCK,mySystemSpeedLock);
 				//but limit speed
-				int limit = std::abs(velocityY)/2;
+				int limit = std::abs(velocityY)/1.5;
 				velocityX = velocityX > limit ? limit : velocityX;
 				//prevent going over center and start oscillation
-				if (entityPosition.x > commingCenterLanePositions[carWantedLane-1]-1) {
+				if (entityPosition.x > commingCenterLanePositions[carWantedLane-1]) {
 					entityPosition.x = commingCenterLanePositions[carWantedLane-1];
 				}
 			}
-			else if (carWantedLanedifference < 0 && thisVelocityComponent->testSpeedLockAvailable(X_MIN_LOCK, mySystemSpeedLock)) {  //car needs to go left and is allowed
-				velocityX-=2; //increase left going speed
-				thisVelocityComponent->setSpeedLock(X_MIN_LOCK,mySystemSpeedLock);
+			else if (carWantedLanedifference < -currentLaneWidth/32 && thisVelocityComponent->testVelocityLockAvailable(X_MIN_LOCK, mySystemSpeedLock)) {  //car needs to go left and is allowed
+				velocityX-=4; //increase left going speed
+				thisVelocityComponent->setVelocityLock(X_MIN_LOCK,mySystemSpeedLock);
 				//but limit speed
-				int limit = -std::abs(velocityY)/2;
+				int limit = -std::abs(velocityY)/1.5;
 				velocityX = velocityX < limit ? limit : velocityX;
 				//prevent going over center and start oscillation
-				if (entityPosition.x < commingCenterLanePositions[carWantedLane-1]+1) {
+				if (entityPosition.x < commingCenterLanePositions[carWantedLane-1]) {
 					entityPosition.x = commingCenterLanePositions[carWantedLane-1];
 				}
 			}
 			else {
-				thisVelocityComponent->clrAllSpeedlocksOfSystem(mySystemSpeedLock); //release lock of speed;
-				if (thisVelocityComponent->testSpeedLockAvailable()) {
+				thisVelocityComponent->clrAllVelocityLocksOfSystem(mySystemSpeedLock); //release lock of speed;
+				//if no lock on changing x-speed at all, stop moving as we are on the center lane position
+				if (thisVelocityComponent->testVelocityLockAvailable(X_MIN_LOCK,mySystemSpeedLock) || thisVelocityComponent->testVelocityLockAvailable(X_PLUS_LOCK,mySystemSpeedLock)) {
 					velocityX = 0;
 				}
 			}
@@ -141,17 +143,17 @@ void CarLaneMovingSystem::processEntity(Entity* entity) {
 	//check grass driving left
 	if (entityPosition.x < (currentCenterLanePositions[0] - currentLaneWidth/2.4) || entityPosition.x > (currentCenterLanePositions[currentNumberOfLanes - 1] + currentLaneWidth/2.4) ) {
 		int newSpeed = (thisVelocityComponent->getVelocityY());
-		if (newSpeed >=30  && thisVelocityComponent->testSpeedLockAvailable(X_MIN_LOCK, mySystemSpeedLock)) {
+		if (newSpeed >=30  && thisVelocityComponent->testVelocityLockAvailable(X_MIN_LOCK, mySystemSpeedLock)) {
 			newSpeed -= 2;
-			thisVelocityComponent->clrAllSpeedlocksOfSystem(mySystemSpeedLock);
-			thisVelocityComponent->setSpeedLock(X_MIN_LOCK,mySystemSpeedLock);
-		} else if (newSpeed <=-20 && thisVelocityComponent->testSpeedLockAvailable(X_PLUS_LOCK, mySystemSpeedLock)) {
-			thisVelocityComponent->clrAllSpeedlocksOfSystem(mySystemSpeedLock);
-			thisVelocityComponent->setSpeedLock(X_PLUS_LOCK,mySystemSpeedLock);
+			thisVelocityComponent->clrAllVelocityLocksOfSystem(mySystemSpeedLock);
+			thisVelocityComponent->setVelocityLock(X_MIN_LOCK,mySystemSpeedLock);
+		} else if (newSpeed <=-20 && thisVelocityComponent->testVelocityLockAvailable(X_PLUS_LOCK, mySystemSpeedLock)) {
+			thisVelocityComponent->clrAllVelocityLocksOfSystem(mySystemSpeedLock);
+			thisVelocityComponent->setVelocityLock(X_PLUS_LOCK,mySystemSpeedLock);
 			newSpeed += 2;
 		}
 		else {
-			thisVelocityComponent->clrAllSpeedlocksOfSystem(mySystemSpeedLock);
+			thisVelocityComponent->clrAllVelocityLocksOfSystem(mySystemSpeedLock);
 		}
 		//shake Car
 		static int shakeVal;
@@ -166,7 +168,7 @@ void CarLaneMovingSystem::processEntity(Entity* entity) {
 	}
 	else // out of grass
 	{
-		thisVelocityComponent->clrAllSpeedlocksOfSystem(mySystemSpeedLock);
+		thisVelocityComponent->clrAllVelocityLocksOfSystem(mySystemSpeedLock);
 	}
 
 	positionMapper.get(entity)->setPosition(entityPosition);

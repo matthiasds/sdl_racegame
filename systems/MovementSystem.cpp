@@ -7,6 +7,20 @@
 
 #include "MovementSystem.h"
 
+/**
+ * MovementSystem:
+ * This System takes care of the vertical and horizontal displacement of car (and eventually other entities with a speed and which are collidable)
+ * Velocity multiplied by a gameDelta is used as the base of moving entities.
+ * Mind that in this System the reference (usually player car) is not considered. This is only done during rendering as it is just a camera viewpoint.
+ * The actual coordinates keep increasing. One should consider to end the level before the Y coordinate overflows or implement a wrap over function.
+ * Right now this is not implemented yet.
+ *
+ * The MovementSystem also handles the collisions detected by the collisionDetection System. It does this by displacing the entities based on the
+ * speedOfImpact emulating a proportional bounce effect.
+ * Mind this system does this entity per entity, so without being aware of other entities only by the saved states of the collision saved by the CollisionSystem
+ * (The CollisionSystem is aware of multiple entities). Interactions between entities should be reduced as it is very cpu consuming by the many loops needed to check every entity with one other.
+ *
+ */
 
 /**
  * Constructor: The Components below are the components to which this system is subscribed.
@@ -43,7 +57,7 @@ void MovementSystem::processEntity(Entity* entity) {
 
 
 		case NO_COLLISION: {
-			myVelocityComponent->clrAllSpeedlocksOfSystem(mySystemSpeedLock);
+			myVelocityComponent->clrAllVelocityLocksOfSystem(mySystemSpeedLock);
 
 		}
 		break;
@@ -55,10 +69,10 @@ void MovementSystem::processEntity(Entity* entity) {
 			if (collisionstatus.collisiontype == 1<<BACK_COL || collisionstatus.collisiontype == 1<<FRONT_COL) {  // (excludes back + left...)
 				velocityMapper.get(entity)->setVelocityY(velocityY + collisionstatus.speedOfImpactY * (0.5 + BUMPFACTOR));  //make car bump relative to impact
 				if (collisionstatus.collisiontype == 1<<BACK_COL) { // if a car collides in my back
-					myVelocityComponent->setSpeedLock(Y_MIN_LOCK,mySystemSpeedLock); //Block going slower, do not test for other locks just overrule
+					myVelocityComponent->setVelocityLock(Y_MIN_LOCK,mySystemSpeedLock); //Block going slower, do not test for other locks just overrule
 				}
 				else { // I collides in an enemy's back
-					myVelocityComponent->setSpeedLock(Y_PLUS_LOCK,mySystemSpeedLock); //Block going faster, do not test for other locks just overrule
+					myVelocityComponent->setVelocityLock(Y_PLUS_LOCK,mySystemSpeedLock); //Block going faster, do not test for other locks just overrule
 				}
 			}
 
@@ -66,26 +80,32 @@ void MovementSystem::processEntity(Entity* entity) {
 			if (collisionstatus.collisiontype == 1<< LEFT_COL || collisionstatus.collisiontype == 1<< RIGHT_COL) {  //if I hit/get hit on side (excludes back + left...)
 				velocityMapper.get(entity)->setVelocityX(velocityX + collisionstatus.speedOfImpactX * (0.5 + BUMPFACTOR));  //make my car bump relative to velocity
 				if (collisionstatus.collisiontype == 1<<LEFT_COL) { // if I get hit on the left side
-					myVelocityComponent->setSpeedLock(X_MIN_LOCK,mySystemSpeedLock); //Block going left, do not test for other locks just overrule
+					myVelocityComponent->setVelocityLock(X_MIN_LOCK,mySystemSpeedLock); //Block going left, do not test for other locks just overrule
 				}
 				else { // if I get hit on the right side
-					myVelocityComponent->setSpeedLock(X_PLUS_LOCK, mySystemSpeedLock); //Block going right, do not test for other locks just overrule
+					myVelocityComponent->setVelocityLock(X_PLUS_LOCK, mySystemSpeedLock); //Block going right, do not test for other locks just overrule
 				}
 			}
 
 			// CORNER collisions = LEFT + BACK ...
 			if ((collisionstatus.collisiontype.test(LEFT_COL) || collisionstatus.collisiontype.test(RIGHT_COL)) && (collisionstatus.collisiontype.test(BACK_COL) || collisionstatus.collisiontype.test(FRONT_COL))) {  //if I hit/get hit on left back corner
 				std::cout << "corner bump"<< std::endl;
-				//do not act on front collision when other car is faster then me, otherwise car seems like being grapped when collide on pass
+				//do not act on front collision when other car is faster then me, otherwise car seems like being grabbed when collide on pass
 				if ((collisionstatus.collisiontype.test(FRONT_COL) && collisionstatus.speedOfImpactY < 0) || (collisionstatus.collisiontype.test(BACK_COL) && collisionstatus.speedOfImpactY > 0) ) velocityMapper.get(entity)->setVelocityY(velocityY + collisionstatus.speedOfImpactY * (0.6 + BUMPFACTOR));
 				velocityMapper.get(entity)->setVelocityX(velocityX + collisionstatus.speedOfImpactX * (0.6 + BUMPFACTOR)); //make other car bump backward
-				if (collisionstatus.collisiontype.test(FRONT_COL)) myVelocityComponent->setSpeedLock(Y_PLUS_LOCK,mySystemSpeedLock);
-				if (collisionstatus.collisiontype.test(LEFT_COL)) myVelocityComponent->setSpeedLock(X_MIN_LOCK,mySystemSpeedLock);
-				if (collisionstatus.collisiontype.test(RIGHT_COL)) myVelocityComponent->setSpeedLock(X_PLUS_LOCK,mySystemSpeedLock);
-				if (collisionstatus.collisiontype.test(BACK_COL)) myVelocityComponent->setSpeedLock(Y_MIN_LOCK,mySystemSpeedLock);
-
+				//deadlock? if hit on both corners...
+				if (collisionstatus.collisiontype.test(BACK_COL) && collisionstatus.collisiontype.test(FRONT_COL) && collisionstatus.collisiontype.test(RIGHT_COL) && collisionstatus.collisiontype.test(LEFT_COL)) {
+					//only lock front and right so left and right is a solution
+					myVelocityComponent->setVelocityLock(Y_PLUS_LOCK,mySystemSpeedLock);
+					myVelocityComponent->setVelocityLock(Y_MIN_LOCK,mySystemSpeedLock);
+				}
+				else { //no deadlock:
+					if (collisionstatus.collisiontype.test(FRONT_COL)) myVelocityComponent->setVelocityLock(Y_PLUS_LOCK,mySystemSpeedLock);
+					if (collisionstatus.collisiontype.test(LEFT_COL)) myVelocityComponent->setVelocityLock(X_MIN_LOCK,mySystemSpeedLock);
+					if (collisionstatus.collisiontype.test(RIGHT_COL)) myVelocityComponent->setVelocityLock(X_PLUS_LOCK,mySystemSpeedLock);
+					if (collisionstatus.collisiontype.test(BACK_COL)) myVelocityComponent->setVelocityLock(Y_MIN_LOCK,mySystemSpeedLock);
+				}
 			}
-
 			//next state
 			collisionMapper.get(entity)->setCollisionStatusHandlingState(AFTER_COLLISION_HANDLING);
 		}

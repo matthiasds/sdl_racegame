@@ -10,7 +10,6 @@
 
 #include "IComponent.h"
 #include "SharedCollisionComponent.h"
-#include "Utils.h"
 
 #define MAX_NR_OF_COLLISIONTYPES 4
 enum CollisionTypeBit {BACK_COL, FRONT_COL, LEFT_COL, RIGHT_COL};

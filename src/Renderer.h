@@ -5,10 +5,11 @@
 #include <vector>
 #include <map>
 #include <SDL2\SDL_ttf.h>
-#include "Utils.h"
 #include "Sprite.h"
 #include "Image.h"
-
+#include "Point.h"
+#include "Rect.h"
+#include "Color.h"
 
 class Image;
 class Renderer;

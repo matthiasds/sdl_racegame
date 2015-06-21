@@ -178,23 +178,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1860661278" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1281518757"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.6789611" name="PhysicsComponent.h" rcbsApplicability="disable" resourcePath="src/PhysicsComponent.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1854227024" name="GameRenderer.h" rcbsApplicability="disable" resourcePath="src/GameRenderer.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.2077564383" name="RoadGraphicsComponent.h" rcbsApplicability="disable" resourcePath="src/RoadGraphicsComponent.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1337291949" name="SdlRoad.h" rcbsApplicability="disable" resourcePath="src/SdlRoad.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.817699494" name="SdlCar.h" rcbsApplicability="disable" resourcePath="src/SdlCar.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.2146934882" name="RoadPhysicsComponent.h" rcbsApplicability="disable" resourcePath="src/RoadPhysicsComponent.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1408579403" name="RoadInputComponent.h" rcbsApplicability="disable" resourcePath="src/RoadInputComponent.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.648485843" name="Road.h" rcbsApplicability="disable" resourcePath="src/Road.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1988631071" name="CarPhysicsComponent.h" rcbsApplicability="disable" resourcePath="src/CarPhysicsComponent.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1779208247" name="CarInputComponent.h" rcbsApplicability="disable" resourcePath="src/CarInputComponent.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.329132943" name="IRenderable.h" rcbsApplicability="disable" resourcePath="src/IRenderable.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1163688757" name="Menu.h" rcbsApplicability="disable" resourcePath="src/Menu.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.1240944433" name="Car.h" rcbsApplicability="disable" resourcePath="src/Car.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.66253347" name="GraphicsComponent.h" rcbsApplicability="disable" resourcePath="src/GraphicsComponent.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.697065452" name="GameStateMachine.h" rcbsApplicability="disable" resourcePath="src/GameStateMachine.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.988988841" name="BackgroundRenderProcess.h" rcbsApplicability="disable" resourcePath="src/BackgroundRenderProcess.h" toolsToInvoke=""/>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.29441079" name="CarGraphicsComponent.h" rcbsApplicability="disable" resourcePath="src/CarGraphicsComponent.h" toolsToInvoke=""/>
 					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1673354505.2128988628" name="/" resourcePath="systems">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.490254010" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>

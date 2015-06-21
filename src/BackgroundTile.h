@@ -8,7 +8,7 @@
 #ifndef BACKGROUNDTILE_H_
 #define BACKGROUNDTILE_H_
 
-#include "utils.h"
+#include "Point.h"
 
 
 enum TileType { ROAD_3_LANES, GRASS_FULL };

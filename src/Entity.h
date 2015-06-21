@@ -8,8 +8,6 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-
-#include "Utils.h"
 #include "IComponent.h"
 #include <bitset>
 #include <vector>
@@ -17,6 +15,8 @@
 #include "ComponentType.h"
 #include "BitSize.h"
 #include "ComponentTypeManager.h"
+
+#include "Point.h"
 
 class Game;
 class Renderer;

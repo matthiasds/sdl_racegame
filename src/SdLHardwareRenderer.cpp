@@ -4,15 +4,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
 #include <string>
 
-//#include "SharedResources.h"
-#include "Settings.h"
-#include "Utils.h"
+#include "Point.h"
+#include "Rect.h"
+#include "Color.h"
 
 #include <SDL2\SDL_ttf.h>
 #include "SdlHardwareRenderer.h"
+#include "GameOptions.h"
 
 
 SdlHardwareImage::SdlHardwareImage(Renderer *_device, SDL_Renderer *_renderer)
@@ -296,7 +296,7 @@ int SdlHardwareRenderer::createContext(int width, int height) {
 		return 0;
 	}
 	else {
-		logError("SDLHardwareRenderDevice: createContext() failed: %s", SDL_GetError());
+		std::cerr << "SDLHardwareRenderDevice: createContext() failed: %s" << SDL_GetError();
 		SDL_Quit();
 		exit(1);
 	}
@@ -378,12 +378,7 @@ int SdlHardwareRenderer::renderToImage(Image* src_image, Rect& src, Image* dest_
 	return 0;
 }
 
-int SdlHardwareRenderer::renderText(
-	TTF_Font *ttf_font,
-	const std::string& text,
-	Color color,
-	Rect& dest
-) {
+int SdlHardwareRenderer::renderText(TTF_Font *ttf_font, const std::string& text, Color color, Rect& dest) {
 	int ret = 0;
 	SDL_Texture *surface = NULL;
 
@@ -529,7 +524,7 @@ Image *SdlHardwareRenderer::createImage(int width, int height) {
 	if (width > 0 && height > 0) {
 		image->surface = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, width, height);
 		if(image->surface == NULL) {
-			logError("SDLHardwareRenderDevice: SDL_CreateTexture failed: %s", SDL_GetError());
+			std::cerr << "SDLHardwareRenderDevice: SDL_CreateTexture failed: %s" << SDL_GetError();
 		}
 		else {
 				SDL_SetRenderTarget(renderer, image->surface);
@@ -582,17 +577,12 @@ void SdlHardwareRenderer::listModes(std::vector<Rect> &modes) {
 		mode_rect.h = display_mode.h;
 		modes.push_back(mode_rect);
 
-		if (display_mode.w < MIN_VIEW_W || display_mode.h < MIN_VIEW_H) {
-			// make sure the resolution fits in the constraints of MIN_VIEW_W and MIN_VIEW_H
-			modes.pop_back();
-		}
-		else {
-			// check previous resolutions for duplicates. If one is found, drop the one we just added
-			for (unsigned j=0; j<modes.size()-1; ++j) {
-				if (modes[j].w == display_mode.w && modes[j].h == display_mode.h) {
-					modes.pop_back();
-					break;
-				}
+
+		// check previous resolutions for duplicates. If one is found, drop the one we just added
+		for (unsigned j=0; j<modes.size()-1; ++j) {
+			if (modes[j].w == display_mode.w && modes[j].h == display_mode.h) {
+				modes.pop_back();
+				break;
 			}
 		}
 	}
@@ -613,7 +603,7 @@ Image *SdlHardwareRenderer::loadImage(std::string filename, std::string errormes
 	if(image->surface == NULL) {
 		delete image;
 		if (!errormessage.empty())
-			logError("SDLHardwareRenderDevice: %s: %s", errormessage.c_str(), IMG_GetError());
+			std::cerr << "SDLHardwareRenderDevice: " << errormessage.c_str() << ":" << IMG_GetError();
 		if (IfNotFoundExit) {
 			SDL_Quit();
 			exit(1);

@@ -9,6 +9,7 @@
 #include "Game.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include "Utils.h"
 
 /**
  * SdlMovingEntityDebugSystem
@@ -51,8 +52,38 @@ void SdlMovingEntityDebugSystem::processEntity(Entity* entity) {
 		drawPositionDebugInfo(entity);
 		drawDamageDebugInfo(entity);
 		drawLaneDebugInfo(entity);
+		drawIdInfo(entity);
 	}
 
+}
+
+/**
+ * Renders the entity ID number on the car
+ * @param entity: entity of which the ID is rendered
+ */
+void SdlMovingEntityDebugSystem::drawIdInfo(Entity* entity) {
+	int id = entity->getId();
+	TTF_Font * font = debugMapper.get(entity)->getFont();
+	Entity* reference = renderReferenceMapper.get(entity)->getReference();
+	FPoint referencePosition = positionMapper.get(reference)->getPosition();
+	Point referenceScreenLocation = renderReferenceMapper.get(reference)->getReferenceScreenLocation();
+	FPoint myPosition = positionMapper.get(entity)->getPosition();
+
+	Rect entityCollisionBox = collisionMapper.get(entity)->getCollisionRect();
+
+	Rect dest;
+
+	debugMapper.get(entity)->setColor(255,255,255);
+	Color color = debugMapper.get(entity)->getColor();
+	dest.w = entityCollisionBox.w*1.9;
+	dest.h = entityCollisionBox.h*0.1;
+	dest.x = myPosition.x - entityCollisionBox.w*0.4;
+	dest.y = referencePosition.y - referenceScreenLocation.y - myPosition.y + entityCollisionBox.h *0.4;
+
+	std::ostringstream idStr;
+
+	idStr << "ID: " << id;
+	game->getRenderer()->renderText(font, idStr.str(), color, dest );
 }
 
 

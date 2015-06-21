@@ -8,8 +8,9 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
-#include "Utils.h"
 #include <vector>
+#include "Point.h"
+#include "Rect.h"
 
 class Image;
 

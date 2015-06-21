@@ -13,7 +13,7 @@
 #include "BitSize.h"
 #include "Entity.h"
 #include "ComponentMapper.h"
-#include "../components/BackgroundRenderComponent.h"
+#include "../components/BackgroundTilingComponent.h"
 #include "../components/RoadComponent.h"
 
 class Game;
@@ -27,7 +27,7 @@ public:
 
 
 private:
-	ComponentMapper<BackgroundRenderComponent> backgroundRenderMapper;
+	ComponentMapper<BackgroundTilingComponent> backgroundTilingMapper;
 	ComponentMapper<RoadComponent> roadMapper;
 };
 

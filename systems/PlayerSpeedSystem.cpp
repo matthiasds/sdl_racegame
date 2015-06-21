@@ -8,6 +8,7 @@
 #include "PlayerSpeedSystem.h"
 #include <cmath>
 #include <iostream>
+#include "GameOptions.h"
 
 /**
  * PlayerSpeedSystem:
@@ -42,20 +43,28 @@ void PlayerSpeedSystem::processEntity(Entity* entity) {
 	VelocityComponent* thisVelocityComponent = velocityMapper.get(entity);
 
 	if(input == UP){
-		if (thisVelocityComponent->testSpeedLockAvailable(Y_PLUS_LOCK,mySystemSpeedLock)) {
-			thisVelocityComponent->setSpeedLock(Y_PLUS_LOCK,mySystemSpeedLock);
-			velocityY++;
+		if (thisVelocityComponent->testVelocityLockAvailable(Y_PLUS_LOCK,mySystemSpeedLock)) {
+			thisVelocityComponent->setVelocityLock(Y_PLUS_LOCK,mySystemSpeedLock);
+			if (velocityY < MAX_PLAYER_FORWARD_SPEED) {
+				velocityY++;
+			}
 		}
 	}
 	else if(input == DOWN){
-		if (thisVelocityComponent->testSpeedLockAvailable(Y_MIN_LOCK,mySystemSpeedLock)) {
-			thisVelocityComponent->setSpeedLock(Y_MIN_LOCK,mySystemSpeedLock);
-			velocityY--;
+		if (thisVelocityComponent->testVelocityLockAvailable(Y_MIN_LOCK,mySystemSpeedLock)) {
+			thisVelocityComponent->setVelocityLock(Y_MIN_LOCK,mySystemSpeedLock);
+			if (velocityY > MAX_PLAYER_REVERSE_SPEED && velocityY <= 0) {
+				velocityY--;
+			}
+			else if (velocityY > 0)
+			{
+				velocityY-=3;
+			}
 		}
 	}
 	if(input == LEFT){
-		if (thisVelocityComponent->testSpeedLockAvailable(X_MIN_LOCK,mySystemSpeedLock)) {
-			thisVelocityComponent->setSpeedLock(X_MIN_LOCK,mySystemSpeedLock);
+		if (thisVelocityComponent->testVelocityLockAvailable(X_MIN_LOCK,mySystemSpeedLock)) {
+			thisVelocityComponent->setVelocityLock(X_MIN_LOCK,mySystemSpeedLock);
 			velocityX--;
 			//limit velocity
 			int limit = - std::abs(velocityY)/2;
@@ -64,8 +73,8 @@ void PlayerSpeedSystem::processEntity(Entity* entity) {
 
 	}
 	else if(input == RIGHT){
-		if (thisVelocityComponent->testSpeedLockAvailable(X_PLUS_LOCK,mySystemSpeedLock)) {
-			thisVelocityComponent->setSpeedLock(X_PLUS_LOCK,mySystemSpeedLock);
+		if (thisVelocityComponent->testVelocityLockAvailable(X_PLUS_LOCK,mySystemSpeedLock)) {
+			thisVelocityComponent->setVelocityLock(X_PLUS_LOCK,mySystemSpeedLock);
 			velocityX++;
 			//limit velocity
 			int limit = std::abs(velocityY)/2;
@@ -74,8 +83,8 @@ void PlayerSpeedSystem::processEntity(Entity* entity) {
 	}
 	else { //no key is pressed
 		//go to 0 but not immediate but wit deceleration relative  to speed
-		thisVelocityComponent->clrAllSpeedlocksOfSystem(mySystemSpeedLock); //free speed lock. Going to 0 can be overruled
-		if (thisVelocityComponent->testSpeedLockAvailable()) {
+		thisVelocityComponent->clrAllVelocityLocksOfSystem(mySystemSpeedLock); //free speed lock. Going to 0 can be overruled
+		if (thisVelocityComponent->testVelocityLockAvailable()) {
 			if (velocityX != 0) {
 				velocityX -= velocityX/2;
 			}

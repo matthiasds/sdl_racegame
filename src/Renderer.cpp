@@ -2,8 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include "Renderer.h"
-#include "Utils.h"
-
+#include <iostream>
 
 
 
@@ -22,10 +21,10 @@ Renderer::~Renderer() {
 void Renderer::destroyContext() {
 	if (!cache.empty()) {
 		IMAGE_CACHE_CONTAINER_ITER it;
-		logError("RenderDevice: Image cache still holding these images:");
+		std::cerr << "RenderDevice: Image cache still holding these images:";
 		it = cache.begin();
 		while (it != cache.end()) {
-			logError("%s %d", it->first.c_str(), it->second->getRefCount());
+			std::cerr << it->first.c_str() << it->second->getRefCount();
 			++it;
 		}
 	}

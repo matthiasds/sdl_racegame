@@ -8,6 +8,7 @@
 #ifndef SDLDEBUGCOMPONENT_H_
 #define SDLDEBUGCOMPONENT_H_
 
+#include <iostream>
 
 class SdlDebugComponent : public IComponent {
 public:
@@ -16,9 +17,9 @@ public:
 	SdlDebugComponent(Renderer* renderer, std::string fontPath, int fontSize) {
 		size = fontSize;
 		color = Color(0,0,255);
-		this->fontPath = fontPath;
-		std::cout << "fontPath: " << this->fontPath << std::endl;
+		this->fontPath=fontPath;
 		loadFont();
+
 	}
 
 	void loadFont()

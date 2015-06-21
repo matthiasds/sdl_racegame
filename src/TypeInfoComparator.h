@@ -1,14 +1,12 @@
-/****************************************************************************
+/*
  * TypeInfoComparator.h
- * Gasboy
  *
- * Created by Stefan Nguyen on 9/12/12.
- *
- * Copyright Vinova Pte. Ltd. All rights reserved.
- ****************************************************************************/
+ *  Created on: 21-jun.-2015
+ *      Author: Matthias
+ */
 
-#ifndef Gasboy_TypeInfoComparator_h
-#define Gasboy_TypeInfoComparator_h
+#ifndef TYPEINFOCOMPARATOR_H
+#define TYPEINFOCOMPARATOR_H
 
 #include <typeinfo>
 
@@ -19,4 +17,4 @@ struct type_info_comparator {
 };
 
 
-#endif
+#endif /* TYPEINFOCOMPARATOR_H */

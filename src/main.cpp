@@ -15,13 +15,12 @@
 #include <iostream>
 #include <stdexcept>
 #include <SDL2/SDL.h>
-#include "Utils.h"
 
 #include "Game.h"
+#include "Utils.h"
 
 
 
-#include "Settings.h"
 //#include "SharedResources.h"
 //#include "game.h"
 using namespace std;
@@ -70,12 +69,12 @@ int main(int argc, char* argv[]) {
 			Utils::getInstance().enableDebugging();
 		}
 		else if (parseArg(arg) == "data-path") {
-			CUSTOM_PATH_DATA = parseArgValue(arg);
-			if (!CUSTOM_PATH_DATA.empty() && CUSTOM_PATH_DATA.at(CUSTOM_PATH_DATA.length()-1) != '/')
-				CUSTOM_PATH_DATA += "/";
+			std::string customPath = parseArgValue(arg);
+			if (!customPath.empty() && customPath.at(customPath.length()-1) != '/')
+				customPath += "/";
 		}
 		else if (parseArg(arg) == "version") {
-			printf("%s\n", getVersionString().c_str());
+			printf("%s\n", Utils::getInstance().getVersionString().c_str());
 			done = true;
 		}
 		else if (parseArg(arg) == "renderer") {

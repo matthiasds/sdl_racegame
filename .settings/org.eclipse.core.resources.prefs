@@ -1,2 +1,3 @@
 eclipse.preferences.version=1
-encoding//systems/EnemyCarControlSystem.cpp=UTF-8
+encoding//src/Game.cpp=UTF-8
+encoding//systems/AICarControlSystem.cpp=UTF-8

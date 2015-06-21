@@ -20,7 +20,6 @@
 
 #include "Renderer.h"
 #include "EntityFactory.h"
-#include "GameRenderer.h"
 #include "TypeInfoComparator.h"
 #include "SystemManager.h"
 #include "BitSize.h"
@@ -73,20 +72,20 @@ private:
 	const float delta = 0.1;
 	Entity * playerCar;
 	Entity * backgrounds;
-	System * enemyCarControlSystem;
+	System * aICarControlSystem;
 	System * sdlInputSystem;
 	System * playerSpeedSystem;
 	System * sdlInfoRenderSystem;
 	System * movementSystem;
 	System * renderSystem;
-	System * backgroundRenderSystem;
+	System * backgroundTilingSystem;
 	System * roadLaneSystem;
 	System * carLaneMovingSystem;
 	System * playerCarLaneMovingSystem;
 	System * collisionSystem;
 	System * sdlMovingEntityDebugSystem;
 	System * damageSystem;
-	System * enemyCarPlacementSystem;
+	System * aICarPlacementSystem;
 
 	Rect screen;
 };

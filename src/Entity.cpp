@@ -10,8 +10,8 @@
 #include "ComponentTypeManager.h"
 #include "Game.h"
 #include "../components/VelocityComponent.h"
-#include "Utils.h"
 #include "BitSize.h"
+#include "Utils.h"
 
 
 

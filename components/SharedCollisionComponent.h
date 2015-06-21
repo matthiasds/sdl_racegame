@@ -11,7 +11,6 @@
 /*This is a component with 1 instance shared by all entities using this component */
 #include "IComponent.h"
 
-#include "Utils.h"
 
 class SharedCollisionComponent : public IComponent {
 public:

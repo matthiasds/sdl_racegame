@@ -9,16 +9,15 @@
 #include "../components/PositionComponent.h"
 #include "../components/VelocityComponent.h"
 #include "../components/SdlRenderComponent.h"
-#include "../components/BackgroundRenderComponent.h"
+#include "../components/BackgroundTilingComponent.h"
 #include "../components/InputComponent.h"
-#include "../components/AIComponent.h"
 #include "../components/RoadComponent.h"
 #include "../components/LaneComponent.h"
 #include "../components/CollisionComponent.h"
 #include "../components/SdlDebugComponent.h"
 #include "../components/DamageComponent.h"
 #include "../components/SdlInfoRenderComponent.h"
-#include "../components/EnemyCarComponent.h"
+#include "../components/AICarComponent.h"
 #include "game.h"
 #include <random>
 #include "Textures.h"
@@ -27,7 +26,6 @@
 
 SdlEntityFactory::SdlEntityFactory() {
 	renderReferenceComponent = new RenderReferenceComponent(NULL);
-	road = NULL;
 }
 
 SdlEntityFactory::~SdlEntityFactory() {
@@ -86,7 +84,6 @@ Entity* SdlEntityFactory::createEnemyCar(Game* game, Renderer* renderer, int pos
 	carTextureBox.y =  carTextureBox.h/2;
 	renderComponent->addStaticSpritefromTexture(getRandomCarTexture(), 0,  carTextureBox, game->getScreen());
 	enemyCar->addComponent(renderComponent);
-	enemyCar->addComponent(new AIComponent());
 	enemyCar->addComponent(renderReferenceComponent);
 	//also add road to enemycar
 	if (road != NULL) {
@@ -101,7 +98,7 @@ Entity* SdlEntityFactory::createEnemyCar(Game* game, Renderer* renderer, int pos
 	collisionBox.x = collisionBox.w/2; //is used as offset
 	collisionBox.y = collisionBox.h/2;
 	enemyCar->addComponent(new CollisionComponent(enemyCar, collisionBox));
-	enemyCar->addComponent(new EnemyCarComponent(enemyCar));
+	enemyCar->addComponent(new AICarComponent(enemyCar));
 	enemyCar->addComponent(new SdlDebugComponent(renderer,PATH_STANDARDFONT, carTextureBox.h * 0.05));
 	enemyCar->addComponent(new DamageComponent());
 	enemyCar->update();
@@ -113,7 +110,7 @@ Entity* SdlEntityFactory::createRoad(Game* game, Renderer* renderer) {
 	if (checkrenderReferenceComponent()) {
 		road = game->createEntity();
 		road->addComponent(new PositionComponent(Point(game->getScreen().w/2, 0)));
-		road->addComponent(new BackgroundRenderComponent(0, 20, game->getScreen()));
+		road->addComponent(new BackgroundTilingComponent(0, 20, game->getScreen()));
 		Rect road3laneTextureBox;
 		road3laneTextureBox.w = game->getScreen().w/1.5;
 		road3laneTextureBox.h = road3laneTextureBox.w /2;
@@ -143,7 +140,7 @@ Entity* SdlEntityFactory::createRoadBorder(Game* game, Renderer* renderer) {
 		roadBorderLeft = game->createEntity();
 		roadBorderLeft->addComponent(new PositionComponent(Point(game->getScreen().w *0.9, 0)));
 		SdlRenderComponent * renderComponentL = new SdlRenderComponent(renderer);
-		roadBorderLeft->addComponent(new BackgroundRenderComponent(0, 20, game->getScreen()));
+		roadBorderLeft->addComponent(new BackgroundTilingComponent(0, 20, game->getScreen()));
 		renderComponentL->addStaticSpritefromTexture(PATH_GRASS_FULL, 0, roadBorderTextureBox, game->getScreen());
 		roadBorderLeft->addComponent(renderComponentL);
 		roadBorderLeft->addComponent(renderReferenceComponent);
@@ -154,7 +151,7 @@ Entity* SdlEntityFactory::createRoadBorder(Game* game, Renderer* renderer) {
 		roadBorderRight = game->createEntity();
 		roadBorderRight->addComponent(new PositionComponent(Point(game->getScreen().w*0.10, 0)));
 		SdlRenderComponent * renderComponentR = new SdlRenderComponent(renderer);
-		roadBorderRight->addComponent(new BackgroundRenderComponent(0, 20, game->getScreen()));
+		roadBorderRight->addComponent(new BackgroundTilingComponent(0, 20, game->getScreen()));
 		renderComponentR->addStaticSpritefromTexture(PATH_GRASS_FULL, 0,  roadBorderTextureBox, game->getScreen());
 		roadBorderRight->addComponent(renderComponentR);
 		roadBorderRight->addComponent(renderReferenceComponent);

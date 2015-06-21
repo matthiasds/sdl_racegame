@@ -79,18 +79,15 @@ void CollisionSystem::processEntity(Entity* entity) {
 						//analyze collisiontype
 						std::bitset<MAX_NR_OF_COLLISIONTYPES> collisionType = analyzeCollisionType(entityCollisionBox, pointOfImpact);
 
-						int speedOfImpactX = velocityMapper.get(currentEntity)->getVelocityX() - velocityMapper.get(entity)->getVelocityX(); //positive = impact to me, negatve, impact from me
+						int speedOfImpactX = velocityMapper.get(currentEntity)->getVelocityX() - velocityMapper.get(entity)->getVelocityX(); //positive = impact to me, negative, impact from me
 						int speedOfImpactY = velocityMapper.get(currentEntity)->getVelocityY() - velocityMapper.get(entity)->getVelocityY();
 						collisionMapper.get(entity)->setCollisionStatus(NEW_COLLISION, currentEntity, collisionType, pointOfImpact, speedOfImpactX, speedOfImpactY);
-
-						std::cout << "Collision of entity id " << entity->getId() << " with entity id " << currentEntity->getId() << std::endl;
-						std::cout << "SpeedOfImpact X: " << speedOfImpactX << " ,SpeedOfImpact Y: " << speedOfImpactY << std::endl;
 					}
 					collisionMapper.get(entity)->updatePointOfImpact(pointOfImpact);
 				}
 				//if handling is done by MovementSystem only CollisionSystem can decide to release collision
 				else if (collisionMapper.get(entity)->getCollisionStatus().collisionHandlingState == COLLISION_HANDLING_DONE) {
-						std::cout << "end collision " << entity->getId() << " with entity id " << currentEntity->getId() << std::endl;
+
 						collisionMapper.get(entity)->setCollisionStatus(NO_COLLISION, NULL, 0, pointOfImpact, 0 , 0);
 				}
 			}

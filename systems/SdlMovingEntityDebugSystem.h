@@ -48,6 +48,7 @@ private:
 	void drawSpeedDebugInfo(Entity* entity);
 	void drawPositionDebugInfo(Entity* entity);
 	void drawLaneDebugInfo(Entity* entity);
+	void drawIdInfo(Entity* entity);
 };
 
 #endif /* SDLMOVINGENTITYDEBUSYSTEM_H_ */
