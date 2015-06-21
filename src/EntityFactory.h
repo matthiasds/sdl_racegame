@@ -12,10 +12,11 @@
 
 class EntityFactory {
 public:
-	virtual Entity* createPlayerCar(Game* game, Renderer* renderer) = 0;
-	virtual Entity* createEnemyCar(Game* game, Renderer* renderer, int position) = 0;
-	virtual Entity* createRoad(Game* game, Renderer* renderer) = 0;
-	virtual Entity* createRoadBorder(Game* game, Renderer* renderer) = 0;
+	virtual Entity* createPlayerCar(Game* game) = 0;
+	virtual Entity* createEnemyCar(Game* game, int position) = 0;
+	virtual Entity* createRoad(Game* game) = 0;
+	virtual Entity* createRoadBorder(Game* game) = 0;
+	virtual void executeAllSystems() = 0;
 	virtual ~EntityFactory() {};
 };
 

@@ -109,7 +109,7 @@ void CollisionSystem::processEntity(Entity* entity) {
 bool CollisionSystem::isEntityInRegionOfInterest(Entity* entity , int referencePosition) {
 	static int WindowsizeH = 0;
 	if (WindowsizeH == 0) {
-		Rect screenSize=game->getRenderer()->getContextSize();
+		Rect screenSize=game->getScreen();
 		WindowsizeH = screenSize.h;
 	}
 	FPoint enityPosition = positionMapper.get(entity)->getPosition();

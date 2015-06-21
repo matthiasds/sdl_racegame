@@ -58,7 +58,7 @@ void SdlRenderSystem::processEntity(Entity* entity) {
 					currentSprite->setDestX(currentposition.x);
 					//std::cout << "render car at game coordinate " << enityPosition.y << " to render coordinate (window) at " << spritePosition.y << std::endl;
 
-					if (game->getRenderer()->render(currentSprite) == 0) {
+					if (renderMapper.get(entity)->getRenderer()->render(currentSprite) == 0) {
 						renderMapper.get(entity)->setOnScreen(true);
 					}
 					else {

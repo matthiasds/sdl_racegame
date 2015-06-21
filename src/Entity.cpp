@@ -68,7 +68,7 @@ void Entity::addComponent(IComponent* component) {
 	 else
 	 {
 		 currentComponents = componentsByType[type.getId()];
-	   if (this->id < currentComponents->size())
+	   if (this->id < (int) currentComponents->size())
 	   {
 		 // Entity already had this component, need to perform component removal first
 		 removeComponent(type);
@@ -134,7 +134,7 @@ void Entity::addSystemBit(std::bitset<BITSIZE> bit) {
 IComponent * Entity::getComponent(ComponentType * type) {
 	IComponent * component = NULL;
 	std::vector<IComponent*> * componentsOfType = game->getComponentsByType()[type->getId()];
-	if(componentsOfType != NULL && id < componentsOfType->size()) {
+	if(componentsOfType != NULL && id < (int) componentsOfType->size()) {
 		component = (*componentsOfType)[id];
 	}
 	return component;

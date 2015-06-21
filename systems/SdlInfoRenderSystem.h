@@ -25,7 +25,7 @@ public:
 	void processEntity(Entity* entity) override;
 	virtual ~SdlInfoRenderSystem();
 private:
-	ComponentMapper<SdlInfoRenderComponent> sdlSpeedRenderMapper;
+	ComponentMapper<SdlInfoRenderComponent> sdlInfoRenderMapper;
 	ComponentMapper<VelocityComponent> velocityMapper;
 	ComponentMapper<DamageComponent> damageMapper;
 

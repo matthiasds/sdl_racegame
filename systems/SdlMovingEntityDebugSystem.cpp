@@ -83,7 +83,7 @@ void SdlMovingEntityDebugSystem::drawIdInfo(Entity* entity) {
 	std::ostringstream idStr;
 
 	idStr << "ID: " << id;
-	game->getRenderer()->renderText(font, idStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, idStr.str(), color, dest );
 }
 
 
@@ -114,13 +114,13 @@ void SdlMovingEntityDebugSystem::drawSpeedDebugInfo(Entity* entity) {
 	std::ostringstream speedStr;
 
 	speedStr << "speedX: " << velocityX;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest );
 
 	speedStr.clear();
 	speedStr.str("");
 	dest.y -=entityCollisionBox.h*0.05;
 	speedStr << "speedY: " << velocityY;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest );
 }
 
 /**
@@ -148,13 +148,13 @@ void SdlMovingEntityDebugSystem::drawPositionDebugInfo(Entity* entity) {
 	std::ostringstream speedStr;
 
 	speedStr << "posX: " << myPosition.x;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest );
 
 	speedStr.clear();
 	speedStr.str("");
 	dest.y -=entityCollisionBox.h*0.05;
 	speedStr << "posY: " << myPosition.y;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest );
 }
 
 /**
@@ -183,7 +183,7 @@ void SdlMovingEntityDebugSystem::drawDamageDebugInfo(Entity* entity) {
 	std::ostringstream speedStr;
 
 	speedStr << "Damage: " << damage;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest );
 }
 
 
@@ -214,13 +214,13 @@ void SdlMovingEntityDebugSystem::drawLaneDebugInfo(Entity* entity) {
 	std::ostringstream laneStr;
 
 	laneStr << "LaneW: " << wantedLane;
-	game->getRenderer()->renderText(font, laneStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, laneStr.str(), color, dest );
 
 	laneStr.clear();
 	laneStr.str("");
 	dest.y +=entityCollisionBox.h*0.05;
 	laneStr << "LaneC: " << currentLane;
-	game->getRenderer()->renderText(font, laneStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, laneStr.str(), color, dest );
 }
 
 /**
@@ -242,13 +242,13 @@ void SdlMovingEntityDebugSystem::drawCollisionDebugInfo(Entity* entity) {
 	entityCollisionBox.y = myPosition.y;
 	Point collisionBoxLeftUnder = Point(entityCollisionBox.x - entityCollisionBox.w/2, referencePosition.y - referenceScreenLocation.y - entityCollisionBox.y - entityCollisionBox.h/2 );
 	Point collisionBoxRightAbove = Point(entityCollisionBox.x + entityCollisionBox.w/2, referencePosition.y - referenceScreenLocation.y - entityCollisionBox.y + entityCollisionBox.h/2 );
-	game->getRenderer()->drawRectangle(collisionBoxLeftUnder, collisionBoxRightAbove, Color(0,255,0) );
+	debugMapper.get(entity)->getRenderer()->drawRectangle(collisionBoxLeftUnder, collisionBoxRightAbove, Color(0,255,0) );
 
 	//draw collision point of impact
 	CollisionStatus& collisionStatus = collisionMapper.get(entity)->getCollisionStatus();
 	int renderCoordinateY =  referencePosition.y - referenceScreenLocation.y-collisionStatus.pointOfImpact.y;
-	game->getRenderer()->drawLine(collisionStatus.pointOfImpact.x -5,  renderCoordinateY,  collisionStatus.pointOfImpact.x +5,  renderCoordinateY, Color(255,0,0) );
-	game->getRenderer()->drawLine(collisionStatus.pointOfImpact.x,  renderCoordinateY-5,  collisionStatus.pointOfImpact.x,  renderCoordinateY+5, Color(255,0,0) );
+	debugMapper.get(entity)->getRenderer()->drawLine(collisionStatus.pointOfImpact.x -5,  renderCoordinateY,  collisionStatus.pointOfImpact.x +5,  renderCoordinateY, Color(255,0,0) );
+	debugMapper.get(entity)->getRenderer()->drawLine(collisionStatus.pointOfImpact.x,  renderCoordinateY-5,  collisionStatus.pointOfImpact.x,  renderCoordinateY+5, Color(255,0,0) );
 
 
 	Rect dest;
@@ -265,13 +265,13 @@ void SdlMovingEntityDebugSystem::drawCollisionDebugInfo(Entity* entity) {
 	std::ostringstream speedStr;
 
 	speedStr << "SOImpactX: " << collisionStatus.speedOfImpactX;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest );
 
 	dest.y -= entityCollisionBox.h *0.05;
 	speedStr.clear();
 	speedStr.str("");
 	speedStr << "SOImpactY: " << collisionStatus.speedOfImpactY;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest );
+	debugMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest );
 
 
 }
@@ -280,7 +280,6 @@ void SdlMovingEntityDebugSystem::drawCollisionDebugInfo(Entity* entity) {
  * Destructor: As Systems generally do not contain data (only Components do) the Systems destructor doesn't have a function
  */
 SdlMovingEntityDebugSystem::~SdlMovingEntityDebugSystem() {
-	// TODO Auto-generated destructor stub
 }
 
 

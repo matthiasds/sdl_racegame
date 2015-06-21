@@ -20,6 +20,7 @@ public:
 	SdlInfoRenderComponent(Renderer* renderer, std::string speedFontPath, int speedFontSize , std::string otherInfoFontPath,int otherInfoFontSize) {
 		speedFont = loadFont(speedFontPath, speedFontSize);
 		otherInfoFont = loadFont(otherInfoFontPath, otherInfoFontSize );
+		this->renderer = renderer;
 	}
 
 
@@ -33,6 +34,9 @@ public:
 		return otherInfoFont;
 	}
 
+	Renderer* getRenderer() {
+		return renderer;
+	}
 
 private:
 
@@ -48,6 +52,7 @@ private:
 
 	TTF_Font * speedFont;
 	TTF_Font * otherInfoFont;
+	Renderer* renderer;
 
 };
 

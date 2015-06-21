@@ -19,7 +19,7 @@ public:
 		color = Color(0,0,255);
 		this->fontPath=fontPath;
 		loadFont();
-
+		this->renderer = renderer;
 	}
 
 	void loadFont()
@@ -53,6 +53,10 @@ public:
 	virtual ~SdlDebugComponent() {
 	}
 
+	Renderer* getRenderer() {
+		return renderer;
+	}
+
 private:
 	std::vector<Sprite*> sprites;
 	TTF_Font * font;
@@ -60,6 +64,7 @@ private:
 
 	int size;
 	std::string fontPath;
+	Renderer* renderer;
 };
 
 #endif /* SDLDEBUGCOMPONENT_H_ */

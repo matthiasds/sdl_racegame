@@ -14,26 +14,12 @@
 #include "SdlEntityFactory.h"
 #include <vector>
 #include <algorithm>
-#include "../systems/MovementSystem.h"
-#include "../systems/SdlRenderSystem.h"
-#include "../systems/SdlInputSystem.h"
-#include "../systems/PlayerSpeedSystem.h"
-#include "../systems/AICarControlSystem.h"
-#include "../systems/backgroundTilingSystem.h"
-#include "../systems/roadLaneSystem.h"
-#include "../systems/CarLaneMovingSystem.h"
-#include "../systems/PlayerCarLaneMovingSystem.h"
-#include "../systems/CollisionSystem.h"
-#include "../systems/SdlMovingEntityDebugSystem.h"
-#include "../systems/SdlInfoRenderSystem.h"
-#include "../systems/DamageSystem.h"
-#include "../systems/AICarPlacementSystem.h"
+
 #include <string>
 #include <typeinfo>
 #include "GameOptions.h"
 #include <chrono>
 #include <windows.h>
-#include "RenderDeviceList.h"
 
 
 
@@ -54,58 +40,42 @@ Game::Game(std::string &render_device_name, int screenWidth, int screenHeight) {
 	screen.w = screenWidth;
 	screen.h = screenHeight;
 
-	// SDL Inits
-//	if ( SDL_Init (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0 ) {
-//		std::cerr << "main: Could not initialize SDL: " << SDL_GetError();
-//		exit(1);
-//	}
-
-	// Create render Device and Rendering Context.
-	renderDevice = getRenderDevice(render_device_name);
-	int status = renderDevice->createContext(screenWidth, screenHeight);
-	factory = new SdlEntityFactory();
 	systemManager = new SystemManager(*this);
 
-
-	movementSystem = systemManager->setSystem(new MovementSystem());
-	renderSystem = systemManager->setSystem(new SdlRenderSystem());
-	sdlInputSystem = systemManager->setSystem(new SdlInputSystem());
-	playerSpeedSystem = systemManager->setSystem(new PlayerSpeedSystem());
-	sdlInfoRenderSystem = systemManager->setSystem(new SdlInfoRenderSystem());
-	aICarControlSystem = systemManager->setSystem(new AICarControlSystem());
-	backgroundTilingSystem = systemManager->setSystem(new BackgroundTilingSystem());
-	roadLaneSystem = systemManager->setSystem(new RoadLaneSystem());
-	playerCarLaneMovingSystem = systemManager->setSystem(new PlayerCarLaneMovingSystem());
-	carLaneMovingSystem = systemManager->setSystem(new CarLaneMovingSystem());
-	collisionSystem = systemManager->setSystem(new CollisionSystem());
-	sdlMovingEntityDebugSystem = systemManager->setSystem(new SdlMovingEntityDebugSystem());
-	damageSystem = systemManager->setSystem(new DamageSystem());
-	aICarPlacementSystem = systemManager->setSystem(new AICarPlacementSystem());
-
+	//create specific factory based on the render_device_name argument of the program
+	if (render_device_name != "") {
+		if (render_device_name == "sdl") {
+			std::cerr << "no software renderer support yet";
+		}
+		else if (render_device_name == "sdl_hardware") {
+			factory = new SdlEntityFactory(this);
+		}
+		else {
+				std::cerr << "Render device " << render_device_name.c_str();
+		}
+	}
+	else {
+		std::cerr << "illegal render argument";
+	}
 
 
 	/*create Game entities and add them to the list of all entities */
-	factory->createRoadBorder(this, renderDevice);
-	factory->createRoad(this, renderDevice);
-	factory->createPlayerCar(this, renderDevice);
+	factory->createRoadBorder(this);
+	factory->createRoad(this);
+	factory->createPlayerCar(this);
 	for (int position = 0; position < screen.h*CAR_REPITITION; position +=screen.h/2) {
-		factory->createEnemyCar(this, renderDevice , position);
+		factory->createEnemyCar(this, position);
 	}
-
-	//Entity * enemyCar2 = factory->createEnemyCar(this, renderDevice);
-
-	systemManager->initAllSystems();
-
 
 	refreshSystemComponentLinks();
 	printEntityInfo();
 
 
-	if (status == -1) {
-
-		std::cerr << "main: Error during SDL_SetVideoMode: %s" << SDL_GetError();
-		SDL_Quit();
-	}
+//	if (status == -1) {
+//
+//		std::cerr << "main: Error during SDL_SetVideoMode: %s" << SDL_GetError();
+//		SDL_Quit();
+//	}
 }
 
 bool priocompare(Entity e1, Entity e2) {
@@ -122,29 +92,9 @@ void Game::start() {
 		std::chrono::time_point<std::chrono::system_clock> now_ticks = std::chrono::system_clock::now();
 		std::chrono::time_point<std::chrono::system_clock> prev_ticks = now_ticks;
 
-		renderDevice->blankScreen();
 
-		//process each system with his own entity list just build up
-		sdlInputSystem->process();
-		aICarControlSystem->process();
-		carLaneMovingSystem->process();
-		playerSpeedSystem->process();
-		//always do collisionsystem after speed and before movent to prevent speed changes before lock of speed which are not represented in SpeedOfImpact
-		collisionSystem->process();
-		movementSystem->process();
-		backgroundTilingSystem->process();
-		renderSystem->process();
-		sdlInfoRenderSystem->process();
-		roadLaneSystem->process();
+		factory->executeAllSystems();
 
-		playerCarLaneMovingSystem->process();
-
-		sdlMovingEntityDebugSystem->process();
-		damageSystem->process();
-		aICarPlacementSystem->process();
-
-
-		renderDevice->commitFrame();
 
 
 		now_ticks = std::chrono::system_clock::now();
@@ -252,31 +202,8 @@ void Game::printEntityInfo(Entity *entity) {
 
 Game::~Game() {
 	std::cout << "Game Destructor callled \n";
-	/*delete gswitch;
-
-	delete anim;
-	delete comb;
-	delete font;
-	delete inpt;
-	delete mods;
-	delete msg;
-	delete snd;
-	delete curs;*/
-
-	//Mix_CloseAudio();
-
-	if (renderDevice)
-		renderDevice->destroyContext();
-	delete renderDevice;
-
-	SDL_Quit();
 }
 
-
-
-Renderer* Game::getRenderer() const {
-	return renderDevice;
-}
 
 const float Game::getDelta() const {
 	return delta;
@@ -332,3 +259,8 @@ void Game::printComponentsByType() {
 const Rect& Game::getScreen() const {
 	return screen;
 }
+
+SystemManager* Game::getSystemManager(){
+	return systemManager;
+}
+

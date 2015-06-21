@@ -50,12 +50,12 @@ public:
 	void refreshSystemComponentLinks(Entity *entity);
 	void refreshSystemComponentLinks();
 	const Rect& getScreen() const;
+	SystemManager* getSystemManager();
 
 private:
-
-	Renderer *renderDevice;
-	EntityFactory * factory;
 	SystemManager * systemManager;
+
+	EntityFactory * factory;
 
 
 	std::vector<Entity *> activeEntityList;
@@ -72,20 +72,7 @@ private:
 	const float delta = 0.1;
 	Entity * playerCar;
 	Entity * backgrounds;
-	System * aICarControlSystem;
-	System * sdlInputSystem;
-	System * playerSpeedSystem;
-	System * sdlInfoRenderSystem;
-	System * movementSystem;
-	System * renderSystem;
-	System * backgroundTilingSystem;
-	System * roadLaneSystem;
-	System * carLaneMovingSystem;
-	System * playerCarLaneMovingSystem;
-	System * collisionSystem;
-	System * sdlMovingEntityDebugSystem;
-	System * damageSystem;
-	System * aICarPlacementSystem;
+
 
 	Rect screen;
 };

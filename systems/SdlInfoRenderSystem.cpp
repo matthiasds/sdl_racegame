@@ -48,7 +48,7 @@ void SdlInfoRenderSystem::processEntity(Entity* entity) {
 void SdlInfoRenderSystem::drawSpeed(Entity* entity) {
 	//std::sort(entitiesToUpdate.begin() , entitiesToUpdate.end(), priocompare);
 	int speed = velocityMapper.get(entity)->getVelocityY();
-	TTF_Font* font = sdlSpeedRenderMapper.get(entity)->getSpeedFont();
+	TTF_Font* font = sdlInfoRenderMapper.get(entity)->getSpeedFont();
 	Rect screenSize = game->getScreen();
 	Rect dest;
 	dest.w = screenSize.w;
@@ -62,7 +62,7 @@ void SdlInfoRenderSystem::drawSpeed(Entity* entity) {
 		speedStr << "R ";
 	}
 	speedStr << speed;
-	game->getRenderer()->renderText(font, speedStr.str(), color, dest);
+	sdlInfoRenderMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), color, dest);
 }
 
 
@@ -74,7 +74,7 @@ void SdlInfoRenderSystem::drawSpeed(Entity* entity) {
 void SdlInfoRenderSystem::drawDamage(Entity* entity) {
 	//std::sort(entitiesToUpdate.begin() , entitiesToUpdate.end(), priocompare);
 	int damage = damageMapper.get(entity)->getDamage();
-	TTF_Font* font = sdlSpeedRenderMapper.get(entity)->getOtherInfoFont();
+	TTF_Font* font = sdlInfoRenderMapper.get(entity)->getOtherInfoFont();
 	Rect screenSize = game->getScreen();
 	Rect dest;
 	int scalefactor = 10;
@@ -86,12 +86,12 @@ void SdlInfoRenderSystem::drawDamage(Entity* entity) {
 	Point rightUnder = Point(screenSize.w * 0.01 + (screenSize.w * damage) * 0.0015 , screenSize.h * 0.19);
 
 	Color color = Color(255*damage/100, 255*(100-damage)/100, 0);
-	game->getRenderer()->drawFilledRectangle(leftTop, rightUnder, color);
+	sdlInfoRenderMapper.get(entity)->getRenderer()->drawFilledRectangle(leftTop, rightUnder, color);
 	rightUnder.x = screenSize.w * 0.16;
-	game->getRenderer()->drawRectangle(leftTop, rightUnder, color);
+	sdlInfoRenderMapper.get(entity)->getRenderer()->drawRectangle(leftTop, rightUnder, color);
 	std::ostringstream speedStr;
 	speedStr << "Damage: ";
-	game->getRenderer()->renderText(font, speedStr.str(), Color(255, 255, 255), dest);
+	sdlInfoRenderMapper.get(entity)->getRenderer()->renderText(font, speedStr.str(), Color(255, 255, 255), dest);
 }
 
 

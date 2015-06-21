@@ -166,7 +166,6 @@ bool SdlHardwareImage::getAlphaXY(int x, int y)
 	targetpixels.w = width;
 	targetpixels.h = height;
 
-	const std::size_t pixelSize = pitch*height;
 	if (textureAccessType == SDL_TEXTUREACCESS_TARGET) {
 		//pixels = new int; //malloc(pixelSize);//operator new(pixelSize);
 		SDL_SetRenderTarget(renderer, surface);
