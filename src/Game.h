@@ -35,7 +35,6 @@ class Game {
 
 public:
 	Game(std::string &render_device_name, int screenWidth, int screenHeight);
-	Renderer* getRenderer() const;
 	Entity* createEntity();
 
 	void start();

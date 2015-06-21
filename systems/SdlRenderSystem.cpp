@@ -42,7 +42,7 @@ void SdlRenderSystem::processEntity(Entity* entity) {
 
 	//std::sort(entitiesToUpdate.begin() , entitiesToUpdate.end(), priocompare);
 
-	std::vector<Sprite*> sprites = renderMapper.get(entity)->getSprites();
+	std::vector<Au_2Drenderer::Sprite*> sprites = renderMapper.get(entity)->getSprites();
 	Entity* reference = renderReferenceMapper.get(entity)->getReference();
 	Point referenceScreenLocation = renderReferenceMapper.get(reference)->getReferenceScreenLocation();
 	FPoint referencePosition = positionMapper.get(reference)->getPosition();

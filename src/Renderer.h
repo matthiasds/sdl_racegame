@@ -11,30 +11,21 @@
 #include "Rect.h"
 #include "Color.h"
 
-
+namespace Au_2Drenderer {
 class Image;
-class Renderer;
-
-
-
-
-
-
-
-
-
 
 
 /**
+ * Renderer provides an interface for renderning a Renderable to the screen.
+ * Each rendering device implementation must implement this interface completely
+ * In this way a 2nd level of abstraction for 2D rendering is created.
  *
- * Provide an abstract interface for renderning a Renderable to the screen.
- * Each rendering device implementation must fully implement the interface.
- * The idea is that the render() method replicates the behaviour of
- * SDL_BlitSurface() with different rendering backends, but bases on the
- * information carried in a Renderable struct.
- *
+ * In this way a render uses this standard interface and implements it in his own way
+ * an implementation of this is the SdlHardwareRenderer, but it can also be an SdlSoftwareRender
+ * or openGLrenderer... The interface is created to be able to work with any general 2D renderer
  *
  */
+
 class Renderer {
 
 public:
@@ -95,5 +86,6 @@ private:
 
 
 };
+}
 
 #endif // RENDERDEVICE_H

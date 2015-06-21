@@ -46,7 +46,7 @@ private:
 	Entity* road;
 	Entity * playerCar;
 
-	Renderer *renderDevice;
+	Au_2Drenderer::Renderer *renderDevice;
 
 	SystemManager * systemManager;
 	System * aICarControlSystem;

@@ -34,7 +34,7 @@ SdlEntityFactory::SdlEntityFactory(Game* game) {
 
 	// Create render Device and Rendering Context.
 
-	renderDevice = new SdlHardwareRenderer();
+	renderDevice = new Au_sdl::SdlHardwareRenderer();
 	Rect screen = game->getScreen();
 	int status = renderDevice->createContext(screen.w, screen.h);
 

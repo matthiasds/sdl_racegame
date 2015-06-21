@@ -12,9 +12,12 @@
 #include "Point.h"
 #include "Rect.h"
 
+
+namespace Au_2Drenderer {
+
 class Image;
 
-/** A Sprite representation
+/** Sprite:
  *
  * A Sprite is instantiated from a Image instance using
  * Image::createSprite() which will increase the reference counter of
@@ -22,7 +25,7 @@ class Image;
  * source image instance.
  *
  * A Sprite represents an area in a Image, it can be the full image or
- * just parts of the image such as an image atlas / spritemap.
+ * just parts of the image such as an image spritemap.
  *
  * Sprite constructor is private to prevent creation of Sprites
  * outside of Image instance.
@@ -83,6 +86,8 @@ protected:
 	bool active;  //boolean to temporary disable rendering
 	Rect textureRenderBox;
 };
+
+}
 
 
 #endif /* SPRITE_H_ */

@@ -19,7 +19,6 @@
 #include "Point.h"
 
 class Game;
-class Renderer;
 
 class Entity {
 public:

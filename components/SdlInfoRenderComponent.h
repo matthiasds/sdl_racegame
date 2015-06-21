@@ -15,16 +15,14 @@
 #include <iostream>
 
 
+
 class SdlInfoRenderComponent : public IComponent{
 public:
-	SdlInfoRenderComponent(Renderer* renderer, std::string speedFontPath, int speedFontSize , std::string otherInfoFontPath,int otherInfoFontSize) {
+	SdlInfoRenderComponent(Au_2Drenderer::Renderer* renderer, std::string speedFontPath, int speedFontSize , std::string otherInfoFontPath,int otherInfoFontSize) {
 		speedFont = loadFont(speedFontPath, speedFontSize);
 		otherInfoFont = loadFont(otherInfoFontPath, otherInfoFontSize );
 		this->renderer = renderer;
 	}
-
-
-
 
 	TTF_Font* getSpeedFont() {
 		return speedFont;
@@ -34,26 +32,27 @@ public:
 		return otherInfoFont;
 	}
 
-	Renderer* getRenderer() {
+	Au_2Drenderer::Renderer* getRenderer() {
 		return renderer;
 	}
 
 private:
 
 	TTF_Font*  loadFont(std::string fontPath, int size){
-			TTF_Font* font;
-			font = TTF_OpenFont( fontPath.c_str(), size );
-			if( font == NULL )
-			{
-				std::cerr << "Failed to load font " << fontPath << ", Error: " << TTF_GetError() << std::endl;
-			}
-			return font;
+		TTF_Font* font;
+		font = TTF_OpenFont( fontPath.c_str(), size );
+		if( font == NULL )
+		{
+			std::cerr << "Failed to load font " << fontPath << ", Error: " << TTF_GetError() << std::endl;
+		}
+		return font;
 	}
 
 	TTF_Font * speedFont;
 	TTF_Font * otherInfoFont;
-	Renderer* renderer;
+	Au_2Drenderer::Renderer* renderer;
 
 };
+
 
 #endif /* SDLINFORENDERCOMPONENT_H_ */

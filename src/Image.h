@@ -10,15 +10,24 @@
 #define IMAGE_H_
 
 #include "Sprite.h"
+
+namespace Au_2Drenderer {
+
 class Renderer;
 
 /**  image representation
- * An image can only be instantiated, and is owned, by a RenderDevice
- * For a SDL render device this means SDL_Surface or a SDL_Texture, and
- * by OpenGL render device this is a texture.
+ * an image is an abstract interface for more specific implementations of it.
  *
- * Image uses a reference counter to control when to free the resource, when the
- * last reference is released, the Image is freed using RenderDevice::freeImage().
+ * An image can only be instantiated, and is owned, by a RenderDevice
+ * For an SDL render device this means an SDL_Surface (software renderer) or a
+ * SDL_Texture (hardware renderer), and
+ * but appar from SDL this implementation could also be an OpenGL render device with
+ * a texture.
+ *
+ * This Image class has functionallity to reuse the same image when it is used multiple times
+ * To be able to destruct the image in a right way a reference counter is used to control
+ * when to free the resource, when the last reference is released, the Image is
+ * freed using RenderDevice::freeImage().
  *
  * The caller who instantiates an Image is responsible for release the reference
  * to the image when not used anymore.
@@ -50,15 +59,15 @@ public:
 	class Sprite *createSprite(bool clipToSize, Rect renderArea);
 	Renderer* getRenderer() const;
 
-private:
 	Image(Renderer *device);
+	Renderer *device;
 	virtual ~Image();
-	friend class SdlSoftwareImage;
-	friend class SdlHardwareImage;
 
 private:
-	Renderer *device;
+	friend class SdlHardwareImage;
 	uint32_t ref_counter;
 };
+
+}
 
 #endif /* IMAGE_H_ */

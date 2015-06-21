@@ -4,43 +4,23 @@
 #ifndef SDLHARDWARERENDERDEVICE_H
 #define SDLHARDWARERENDERDEVICE_H
 
-
+/**
+ * SdlHardwareRenderer
+ * Here all rendering functions for the SDL Hardware renderer (needs SDL 2) are implemented
+ *
+ * functions are based on http://lazyfoo.net/ SDL Tutorials and some other open examples
+ */
 #include "Renderer.h"
 
-/** Provide rendering device using SDL_BlitSurface backend.
- *
- * Provide an SDL_BlitSurface implementation for renderning a Renderable to
- * the screen.  Simply dispatches rendering to SDL_BlitSurface().
- *
- * As this is for the FLARE engine, the implementation uses the engine's
- * global settings context, which is included by the interface.
- *
- *
- */
+
 
 #define SDLKey SDL_Keycode
 
 #define SDL_JoystickName SDL_JoystickNameForIndex
 
+using namespace Au_2Drenderer;
+namespace Au_sdl {
 
-/** SDL Image */
-class SdlHardwareImage : public Image {
-public:
-	SdlHardwareImage(Renderer *device, SDL_Renderer *_renderer);
-	virtual ~SdlHardwareImage();
-	int getWidth() const;
-	int getHeight() const;
-
-	void fillWithColor(Uint32 color) override;
-	void drawPixel(int x, int y, Uint32 color) override;
-	Uint32 MapRGB(Uint8 r, Uint8 g, Uint8 b) override;
-	Uint32 MapRGBA(Uint8 r, Uint8 g, Uint8 b, Uint8 a) override;
-	Image* resize(int width, int height) override;
-	bool getAlphaXY(int x, int y) override;
-
-	SDL_Renderer *renderer;
-	SDL_Texture *surface;
-};
 
 class SdlHardwareRenderer : public Renderer {
 
@@ -83,5 +63,5 @@ private:
 	char* title;
 };
 
-
+}
 #endif // SDLHARDWARERENDERDEVICE_H

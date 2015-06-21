@@ -10,6 +10,24 @@
 #include "Renderer.h"
 
 
+/** Sprite:
+ *
+ * A Sprite is instantiated from a Image instance using
+ * Image::createSprite() which will increase the reference counter of
+ * the image. Sprite::~Sprite() will release the reference to the
+ * source image instance.
+ *
+ * A Sprite represents an area in a Image, it can be the full image or
+ * just parts of the image such as an image spritemap.
+ *
+ * Sprite constructor is private to prevent creation of Sprites
+ * outside of Image instance.
+ *
+ *
+ */
+
+namespace Au_2Drenderer {
+
 Sprite::Sprite(Image *_image , Rect renderArea)
 	: renderArea(renderArea)
 	, image(_image)
@@ -146,4 +164,6 @@ const Rect& Sprite::getTextureRenderBox() const {
 
 void Sprite::setTextureRenderBox(const Rect& textureRenderBox) {
 	this->textureRenderBox = textureRenderBox;
+}
+
 }

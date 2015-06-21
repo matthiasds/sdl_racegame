@@ -4,7 +4,21 @@
 #include "Renderer.h"
 #include <iostream>
 
+namespace Au_2Drenderer {
+class Image;
+class Renderer;
 
+
+/**
+ * Renderer provides an interface for renderning a Renderable to the screen.
+ * Each rendering device implementation must implement this interface completely
+ * In this way a 2nd level of abstraction for 2D rendering is created.
+ *
+ * In this way a render uses this standard interface and implements it in his own way
+ * an implementation of this is the SdlHardwareRenderer, but it can also be an SdlSoftwareRender
+ * or openGLrenderer... The interface is created to be able to work with any general 2D renderer
+ *
+ */
 
 
 
@@ -119,4 +133,5 @@ bool Renderer::renderAreaConversion(Sprite *sprite, int offsetIndex) {
 	m_dest.y = upScaled + renderArea.y;
 
 	return true;
+}
 }

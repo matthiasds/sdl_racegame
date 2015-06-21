@@ -8,13 +8,17 @@
 #ifndef SDLDEBUGCOMPONENT_H_
 #define SDLDEBUGCOMPONENT_H_
 
+
 #include <iostream>
+
+
+
 
 class SdlDebugComponent : public IComponent {
 public:
 
 
-	SdlDebugComponent(Renderer* renderer, std::string fontPath, int fontSize) {
+	SdlDebugComponent(Au_2Drenderer::Renderer* renderer, std::string fontPath, int fontSize) {
 		size = fontSize;
 		color = Color(0,0,255);
 		this->fontPath=fontPath;
@@ -26,9 +30,9 @@ public:
 	{
 		font = TTF_OpenFont( fontPath.c_str(), size );
 		 if( font == NULL )
-			{
-				std::cerr << "Failed to load font " << fontPath << ", Error: " << TTF_GetError() << std::endl;
-			}
+		{
+			std::cerr << "Failed to load font " << fontPath << ", Error: " << TTF_GetError() << std::endl;
+		}
 	}
 
 
@@ -53,19 +57,20 @@ public:
 	virtual ~SdlDebugComponent() {
 	}
 
-	Renderer* getRenderer() {
+	Au_2Drenderer::Renderer* getRenderer() {
 		return renderer;
 	}
 
 private:
-	std::vector<Sprite*> sprites;
+	std::vector<Au_2Drenderer::Sprite*> sprites;
 	TTF_Font * font;
 	Color color;
 
 	int size;
 	std::string fontPath;
-	Renderer* renderer;
+	Au_2Drenderer::Renderer* renderer;
 };
+
 
 #endif /* SDLDEBUGCOMPONENT_H_ */
 
